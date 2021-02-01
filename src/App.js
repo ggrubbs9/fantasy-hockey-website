@@ -1,7 +1,7 @@
-import logo from "./logo.svg";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
-import "./App.css";
+
+import { Container } from "@material-ui/core";
 
 const gitHubUrl =
   "https://statsapi.web.nhl.com/api/v1/people/8478402/stats?stats=yearByYear";
@@ -17,21 +17,10 @@ function App() {
   };
 
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Container maxWidth='sm'>
+        <h1>hi</h1>
+      </Container>
     </div>
   );
 }
