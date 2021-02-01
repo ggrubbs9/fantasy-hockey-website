@@ -16,6 +16,7 @@ const useStyles = makeStyles({
     width: "100%",
     position: "fixed",
     bottom: 0,
+    backgroundColor: "lightgrey",
   },
 });
 
@@ -74,19 +75,25 @@ function App() {
           <BottomNavigationAction
             component={Link}
             to='/'
-            label='Recents'
+            label='Lineup Machine'
             icon={<RestoreIcon />}
           />
           <BottomNavigationAction
             component={Link}
             to='/about'
-            label='Favorites'
+            label='Schedule'
             icon={<FavoriteIcon />}
           />
           <BottomNavigationAction
             component={Link}
             to='/dashboard'
-            label='Nearby'
+            label='Player Stats'
+            icon={<LocationOnIcon />}
+          />
+          <BottomNavigationAction
+            component={Link}
+            to='/dashboard'
+            label='Team Stats'
             icon={<LocationOnIcon />}
           />
         </BottomNavigation>
