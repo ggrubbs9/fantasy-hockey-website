@@ -12,8 +12,10 @@ const gitHubUrl =
   "https://statsapi.web.nhl.com/api/v1/people/8478402/stats?stats=yearByYear";
 
 const useStyles = makeStyles({
-  root: {
-    width: 500,
+  stickToBottom: {
+    width: "100%",
+    position: "fixed",
+    bottom: 0,
   },
 });
 
@@ -67,7 +69,7 @@ function App() {
             setValue(newValue);
           }}
           showLabels
-          className={classes.root}
+          className={classes.stickToBottom}
         >
           <BottomNavigationAction
             component={Link}
