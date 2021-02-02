@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
@@ -8,9 +7,6 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
-
-const gitHubUrl =
-  'https://statsapi.web.nhl.com/api/v1/people/8478402/stats?stats=yearByYear';
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -23,17 +19,7 @@ const useStyles = makeStyles({
 
 function App() {
   const [value, setValue] = React.useState(0);
-
   const classes = useStyles();
-
-  useEffect(() => {
-    // getData();
-  }, []);
-
-  const getData = async () => {
-    const response = await axios.get(gitHubUrl);
-    console.log(response.data);
-  };
 
   function Dashboard() {
     return <h2>Users</h2>;
@@ -53,7 +39,7 @@ function App() {
           <Route exact path="/">
             <LineupMachineComponent />
           </Route>
-          <Route path="/about">
+          <Route path="/player-stats">
             <PlayerStatsComponent />
           </Route>
           <Route path="/dashboard">
@@ -77,8 +63,8 @@ function App() {
           />
           <BottomNavigationAction
             component={Link}
-            to="/about"
-            label="Schedule"
+            to="/player-stats"
+            label="Player Stats"
             icon={<FavoriteIcon />}
           />
           <BottomNavigationAction
