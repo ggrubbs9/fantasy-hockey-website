@@ -1,22 +1,23 @@
-import React, { useEffect } from "react";
-import axios from "axios";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
-import RestoreIcon from "@material-ui/icons/Restore";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import HomeComponent from "./pages/Home";
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import LineupMachineComponent from './pages/LineupMachine';
+import PlayerStatsComponent from './pages/PlayerStats';
 
 const gitHubUrl =
-  "https://statsapi.web.nhl.com/api/v1/people/8478402/stats?stats=yearByYear";
+  'https://statsapi.web.nhl.com/api/v1/people/8478402/stats?stats=yearByYear';
 
 const useStyles = makeStyles({
   stickToBottom: {
-    width: "100%",
-    position: "fixed",
+    width: '100%',
+    position: 'fixed',
     bottom: 0,
-    backgroundColor: "lightgrey",
+    backgroundColor: 'lightgrey',
   },
 });
 
@@ -26,17 +27,13 @@ function App() {
   const classes = useStyles();
 
   useEffect(() => {
-    getData();
+    // getData();
   }, []);
 
   const getData = async () => {
     const response = await axios.get(gitHubUrl);
     console.log(response.data);
   };
-
-  function About() {
-    return <h2>About</h2>;
-  }
 
   function Dashboard() {
     return <h2>Users</h2>;
@@ -53,13 +50,13 @@ function App() {
           of them to render at a time
         */}
         <Switch>
-          <Route exact path='/'>
-            <HomeComponent />
+          <Route exact path="/">
+            <LineupMachineComponent />
           </Route>
-          <Route path='/about'>
-            <About />
+          <Route path="/about">
+            <PlayerStatsComponent />
           </Route>
-          <Route path='/dashboard'>
+          <Route path="/dashboard">
             <Dashboard />
           </Route>
         </Switch>
@@ -74,26 +71,26 @@ function App() {
         >
           <BottomNavigationAction
             component={Link}
-            to='/'
-            label='Lineup Machine'
+            to="/"
+            label="Lineup Machine"
             icon={<RestoreIcon />}
           />
           <BottomNavigationAction
             component={Link}
-            to='/about'
-            label='Schedule'
+            to="/about"
+            label="Schedule"
             icon={<FavoriteIcon />}
           />
           <BottomNavigationAction
             component={Link}
-            to='/dashboard'
-            label='Player Stats'
+            to="/dashboard"
+            label="Player Stats"
             icon={<LocationOnIcon />}
           />
           <BottomNavigationAction
             component={Link}
-            to='/dashboard'
-            label='Team Stats'
+            to="/dashboard"
+            label="Team Stats"
             icon={<LocationOnIcon />}
           />
         </BottomNavigation>
