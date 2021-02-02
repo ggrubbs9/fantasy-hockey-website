@@ -18,8 +18,7 @@ const useStyles = makeStyles({
 
 function PlayerStatsComponent() {
   const classes = useStyles();
-  const [playerData, setPlayerData] = useState([]);
-  const [players, setPlayers] = useState([
+  const [players] = useState([
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
     { name: 'Jonathan Huberdeau', id: '8476456' },
@@ -32,19 +31,6 @@ function PlayerStatsComponent() {
     { name: 'Chris Kreider', id: '8475184' },
   ]);
   const [rows, setRows] = useState([]);
-
-  const playerNames = [
-    'Alex Ovechkin',
-    'Mika Zibanejad',
-    'Jonathan Huberdeau',
-    'Jake Guentzel',
-    'Ryan Nugent-Hopkins',
-    'J.T. Miller',
-    'Filip Forsberg',
-    'Brady Tkachuk',
-    'Max Domi',
-    'Chris Kreider',
-  ];
 
   function createData(name, goals, assists, plusMinus, hits, points) {
     return { name, goals, assists, plusMinus, hits, points };
@@ -70,7 +56,7 @@ function PlayerStatsComponent() {
           setRows((rows) => [
             ...rows,
             createData(
-              playerNames[i],
+              players[i].name,
               item.data.stats[0].splits[0].stat.goals,
               item.data.stats[0].splits[0].stat.assists,
               item.data.stats[0].splits[0].stat.plusMinus,
@@ -78,10 +64,7 @@ function PlayerStatsComponent() {
               item.data.stats[0].splits[0].stat.points
             ),
           ]);
-          setPlayerData((playerData) => [
-            ...playerData,
-            item.data.stats[0].splits[0].stat.goals,
-          ]);
+          return null;
         });
       });
     };
@@ -105,19 +88,32 @@ function PlayerStatsComponent() {
                 <TableCell align="left">Plus Minus</TableCell>
                 <TableCell align="left">Hits</TableCell>
                 <TableCell align="left">Points</TableCell>
+                <TableCell align="left">Fantasy Points</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row, i) => (
-                <TableRow key={i}>
-                  <TableCell align="left">{row.name}</TableCell>
-                  <TableCell align="center">{row.goals}</TableCell>
-                  <TableCell align="center">{row.assists}</TableCell>
-                  <TableCell align="center">{row.plusMinus}</TableCell>
-                  <TableCell align="center">{row.hits}</TableCell>
-                  <TableCell align="center">{row.points}</TableCell>
-                </TableRow>
-              ))}
+              {rows
+                .sort(function (a, b) {
+                  return (
+                    b.goals * 2 +
+                    b.assists +
+                    b.plusMinus * 0.5 -
+                    (a.goals * 2 + a.assists + a.plusMinus * 0.5)
+                  );
+                })
+                .map((row, i) => (
+                  <TableRow key={i}>
+                    <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="center">{row.goals}</TableCell>
+                    <TableCell align="center">{row.assists}</TableCell>
+                    <TableCell align="center">{row.plusMinus}</TableCell>
+                    <TableCell align="center">{row.hits}</TableCell>
+                    <TableCell align="center">{row.points}</TableCell>
+                    <TableCell align="center">
+                      {row.goals * 2 + row.assists + row.plusMinus * 0.5}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
