@@ -14,6 +14,9 @@ const useStyles = makeStyles({
   table: {
     minWidth: '100%',
   },
+  marginBottom: {
+    marginBottom: '100px',
+  },
 });
 
 function PlayerStatsComponent() {
@@ -30,7 +33,16 @@ function PlayerStatsComponent() {
     { name: 'Max Domi', id: '8477503' },
     { name: 'Chris Kreider', id: '8475184' },
   ]);
+  const [defensePlayers] = useState([
+    { name: 'Brent Burns', id: '8470613' },
+    { name: 'Ryan Pulock', id: '8477506' },
+    { name: 'Mark Giordano', id: '8470966' },
+    { name: 'Quinn Hughes', id: '8480800' },
+    { name: 'Adam Fox', id: '8479323' },
+    { name: 'Rasmus Ristolainen', id: '8477499' },
+  ]);
   const [rows, setRows] = useState([]);
+  const [defenseRows, setDefenseRows] = useState([]);
 
   function createData(name, games, goals, assists, plusMinus, points) {
     return { name, games, goals, assists, plusMinus, points };
@@ -68,16 +80,47 @@ function PlayerStatsComponent() {
         });
       });
     };
+
+    const getDefensePlayerStats = async () => {
+      const promises = [];
+
+      const getData = async (x) => {
+        const res = axios.get(
+          `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
+        );
+        return res;
+      };
+
+      defensePlayers.forEach((element) => {
+        promises.push(getData(element.id));
+      });
+
+      await Promise.all(promises).then((results) => {
+        results.map((item, i) => {
+          setDefenseRows((rows) => [
+            ...rows,
+            createData(
+              defensePlayers[i].name,
+              item.data.stats[0].splits[0].stat.games,
+              item.data.stats[0].splits[0].stat.goals,
+              item.data.stats[0].splits[0].stat.assists,
+              item.data.stats[0].splits[0].stat.plusMinus,
+              item.data.stats[0].splits[0].stat.points
+            ),
+          ]);
+          return null;
+        });
+      });
+    };
+    getDefensePlayerStats();
     getPlayerStats();
-  }, [players]);
+  }, [defensePlayers, players]);
 
   return (
     <Container>
       <h1>player stats</h1>
-      <div>
-        {/* {playerData.map((item, i) => (
-          <li key={i}>{item}</li>
-        ))} */}
+      <div className={classes.marginBottom}>
+        <h2>Offense Players</h2>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
@@ -94,6 +137,48 @@ function PlayerStatsComponent() {
             </TableHead>
             <TableBody>
               {rows
+                .sort(function (a, b) {
+                  return (
+                    b.goals * 2 +
+                    b.assists +
+                    b.plusMinus * 0.5 -
+                    (a.goals * 2 + a.assists + a.plusMinus * 0.5)
+                  );
+                })
+                .map((row, i) => (
+                  <TableRow key={i}>
+                    <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="center">{row.games}</TableCell>
+                    <TableCell align="center">{row.goals}</TableCell>
+                    <TableCell align="center">{row.assists}</TableCell>
+                    <TableCell align="center">{row.plusMinus}</TableCell>
+                    <TableCell align="center">{row.points}</TableCell>
+                    <TableCell align="center">
+                      {row.goals * 2 + row.assists + row.plusMinus * 0.5}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <br />
+        <h2>Defense Players</h2>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="left">Games Played</TableCell>
+                <TableCell align="left">Goals</TableCell>
+                <TableCell align="left">Assists</TableCell>
+                <TableCell align="left">Plus Minus</TableCell>
+
+                <TableCell align="left">Points</TableCell>
+                <TableCell align="left">Fantasy Points</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {defenseRows
                 .sort(function (a, b) {
                   return (
                     b.goals * 2 +
