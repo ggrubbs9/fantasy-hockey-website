@@ -1,8 +1,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles';
 import { Container } from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: '100%',
+  },
+});
 
 function PlayerStatsComponent() {
+  const classes = useStyles();
   const [playerData, setPlayerData] = useState([]);
   const [players, setPlayers] = useState([
     { name: 'Alex Ovechkin', id: '8471214' },
@@ -16,6 +31,24 @@ function PlayerStatsComponent() {
     { name: 'Max Domi', id: '8477503' },
     { name: 'Chris Kreider', id: '8475184' },
   ]);
+  const [rows, setRows] = useState([]);
+
+  const playerNames = [
+    'Alex Ovechkin',
+    'Mika Zibanejad',
+    'Jonathan Huberdeau',
+    'Jake Guentzel',
+    'Ryan Nugent-Hopkins',
+    'J.T. Miller',
+    'Filip Forsberg',
+    'Brady Tkachuk',
+    'Max Domi',
+    'Chris Kreider',
+  ];
+
+  function createData(name, goals, assists, plusMinus, hits, points) {
+    return { name, goals, assists, plusMinus, hits, points };
+  }
 
   useEffect(() => {
     const getPlayerStats = async () => {
@@ -33,9 +66,18 @@ function PlayerStatsComponent() {
       });
 
       await Promise.all(promises).then((results) => {
-        console.log('done', results);
-        results.forEach((item) => {
-          //console.log(item.data.stats[0].splits[0].stat.goals);
+        results.map((item, i) => {
+          setRows((rows) => [
+            ...rows,
+            createData(
+              playerNames[i],
+              item.data.stats[0].splits[0].stat.goals,
+              item.data.stats[0].splits[0].stat.assists,
+              item.data.stats[0].splits[0].stat.plusMinus,
+              item.data.stats[0].splits[0].stat.hits,
+              item.data.stats[0].splits[0].stat.points
+            ),
+          ]);
           setPlayerData((playerData) => [
             ...playerData,
             item.data.stats[0].splits[0].stat.goals,
@@ -50,9 +92,35 @@ function PlayerStatsComponent() {
     <Container maxWidth="sm">
       <h1>player stats</h1>
       <div>
-        {playerData.map((item, i) => (
+        {/* {playerData.map((item, i) => (
           <li key={i}>{item}</li>
-        ))}
+        ))} */}
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="left">Goals</TableCell>
+                <TableCell align="left">Assists</TableCell>
+                <TableCell align="left">Plus Minus</TableCell>
+                <TableCell align="left">Hits</TableCell>
+                <TableCell align="left">Points</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="center">{row.goals}</TableCell>
+                  <TableCell align="center">{row.assists}</TableCell>
+                  <TableCell align="center">{row.plusMinus}</TableCell>
+                  <TableCell align="center">{row.hits}</TableCell>
+                  <TableCell align="center">{row.points}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </Container>
   );
