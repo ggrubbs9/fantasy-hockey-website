@@ -32,8 +32,8 @@ function PlayerStatsComponent() {
   ]);
   const [rows, setRows] = useState([]);
 
-  function createData(name, goals, assists, plusMinus, hits, points) {
-    return { name, goals, assists, plusMinus, hits, points };
+  function createData(name, games, goals, assists, plusMinus, points) {
+    return { name, games, goals, assists, plusMinus, points };
   }
 
   useEffect(() => {
@@ -57,10 +57,10 @@ function PlayerStatsComponent() {
             ...rows,
             createData(
               players[i].name,
+              item.data.stats[0].splits[0].stat.games,
               item.data.stats[0].splits[0].stat.goals,
               item.data.stats[0].splits[0].stat.assists,
               item.data.stats[0].splits[0].stat.plusMinus,
-              item.data.stats[0].splits[0].stat.hits,
               item.data.stats[0].splits[0].stat.points
             ),
           ]);
@@ -72,7 +72,7 @@ function PlayerStatsComponent() {
   }, [players]);
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <h1>player stats</h1>
       <div>
         {/* {playerData.map((item, i) => (
@@ -83,10 +83,11 @@ function PlayerStatsComponent() {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
+                <TableCell align="left">Games Played</TableCell>
                 <TableCell align="left">Goals</TableCell>
                 <TableCell align="left">Assists</TableCell>
                 <TableCell align="left">Plus Minus</TableCell>
-                <TableCell align="left">Hits</TableCell>
+
                 <TableCell align="left">Points</TableCell>
                 <TableCell align="left">Fantasy Points</TableCell>
               </TableRow>
@@ -104,10 +105,10 @@ function PlayerStatsComponent() {
                 .map((row, i) => (
                   <TableRow key={i}>
                     <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="center">{row.games}</TableCell>
                     <TableCell align="center">{row.goals}</TableCell>
                     <TableCell align="center">{row.assists}</TableCell>
                     <TableCell align="center">{row.plusMinus}</TableCell>
-                    <TableCell align="center">{row.hits}</TableCell>
                     <TableCell align="center">{row.points}</TableCell>
                     <TableCell align="center">
                       {row.goals * 2 + row.assists + row.plusMinus * 0.5}

@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import BuildIcon from '@material-ui/icons/Build';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import PeopleIcon from '@material-ui/icons/People';
 import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 
@@ -59,25 +59,25 @@ function App() {
             component={Link}
             to="/"
             label="Lineup Machine"
-            icon={<RestoreIcon />}
+            icon={<BuildIcon />}
           />
           <BottomNavigationAction
             component={Link}
             to="/player-stats"
             label="Player Stats"
-            icon={<FavoriteIcon />}
-          />
-          <BottomNavigationAction
-            component={Link}
-            to="/dashboard"
-            label="Player Stats"
-            icon={<LocationOnIcon />}
+            icon={<TrendingUpIcon />}
           />
           <BottomNavigationAction
             component={Link}
             to="/dashboard"
             label="Team Stats"
-            icon={<LocationOnIcon />}
+            icon={<PeopleIcon />}
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/dashboard"
+            label="Something"
+            icon={<PeopleIcon />}
           />
         </BottomNavigation>
       </div>
