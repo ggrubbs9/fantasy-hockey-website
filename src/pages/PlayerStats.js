@@ -19,6 +19,8 @@ const useStyles = makeStyles({
   },
 });
 
+// to get player ID -> GET https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster
+
 function PlayerStatsComponent() {
   const classes = useStyles();
   const [players] = useState([
