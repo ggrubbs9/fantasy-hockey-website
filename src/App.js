@@ -5,8 +5,10 @@ import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import BuildIcon from '@material-ui/icons/Build';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import PeopleIcon from '@material-ui/icons/People';
+import CachedIcon from '@material-ui/icons/Cached';
 import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
+import PlayerPickupComponent from './pages/PlayerPickup';
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -45,6 +47,9 @@ function App() {
           <Route path="/dashboard">
             <Dashboard />
           </Route>
+          <Route path="/player-pickup">
+            <PlayerPickupComponent />
+          </Route>
         </Switch>
 
         <BottomNavigation
@@ -75,9 +80,9 @@ function App() {
           />
           <BottomNavigationAction
             component={Link}
-            to="/dashboard"
-            label="Something"
-            icon={<PeopleIcon />}
+            to="/player-pickup"
+            label="Player Pickup"
+            icon={<CachedIcon />}
           />
         </BottomNavigation>
       </div>
