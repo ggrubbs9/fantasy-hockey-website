@@ -76,6 +76,7 @@ function PlayerStatsComponent() {
       getSelectedPlayerStats(5);
       getSelectedDefensePlayerStats(5);
     }
+    // eslint-disable-next-line
   }, [games]);
 
   const getSelectedPlayerStats = async (games) => {
