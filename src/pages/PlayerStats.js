@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container } from '@material-ui/core';
+import {
+  Container,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,6 +22,14 @@ const useStyles = makeStyles({
   },
   marginBottom: {
     marginBottom: '100px',
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  formControl: {
+    minWidth: 180,
+    marginLeft: '24px',
   },
 });
 
@@ -45,82 +59,213 @@ function PlayerStatsComponent() {
   ]);
   const [rows, setRows] = useState([]);
   const [defenseRows, setDefenseRows] = useState([]);
+  const [games, setGames] = useState(1);
 
   function createData(name, games, goals, assists, plusMinus, points) {
     return { name, games, goals, assists, plusMinus, points };
   }
 
   useEffect(() => {
-    const getPlayerStats = async () => {
-      const promises = [];
+    if (games === 1) {
+      getPlayerStats();
+      getDefensePlayerStats();
+    } else if (games === 4) {
+      getSelectedPlayerStats(4);
+      getSelectedDefensePlayerStats(4);
+    } else if (games === 5) {
+      getSelectedPlayerStats(5);
+      getSelectedDefensePlayerStats(5);
+    }
+  }, [games]);
 
-      const getData = async (x) => {
-        const res = axios.get(
-          `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
-        );
-        return res;
-      };
+  const getSelectedPlayerStats = async (games) => {
+    setRows([]);
+    const promises = [];
 
-      players.forEach((element) => {
-        promises.push(getData(element.id));
-      });
-
-      await Promise.all(promises).then((results) => {
-        results.map((item, i) => {
-          setRows((rows) => [
-            ...rows,
-            createData(
-              players[i].name,
-              item.data.stats[0].splits[0].stat.games,
-              item.data.stats[0].splits[0].stat.goals,
-              item.data.stats[0].splits[0].stat.assists,
-              item.data.stats[0].splits[0].stat.plusMinus,
-              item.data.stats[0].splits[0].stat.points
-            ),
-          ]);
-          return null;
-        });
-      });
+    const getData = async (x) => {
+      const res = axios.get(
+        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=gameLog`
+      );
+      return res;
     };
 
-    const getDefensePlayerStats = async () => {
-      const promises = [];
+    players.forEach((element) => {
+      promises.push(getData(element.id));
+    });
 
-      const getData = async (x) => {
-        const res = axios.get(
-          `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
-        );
-        return res;
-      };
+    await Promise.all(promises).then((results) => {
+      results.map((item, i) => {
+        const stats = {
+          games: games,
+          goals: 0,
+          assists: 0,
+          plusMinus: 0,
+          points: 0,
+        };
 
-      defensePlayers.forEach((element) => {
-        promises.push(getData(element.id));
-      });
-
-      await Promise.all(promises).then((results) => {
-        results.map((item, i) => {
-          setDefenseRows((rows) => [
-            ...rows,
-            createData(
-              defensePlayers[i].name,
-              item.data.stats[0].splits[0].stat.games,
-              item.data.stats[0].splits[0].stat.goals,
-              item.data.stats[0].splits[0].stat.assists,
-              item.data.stats[0].splits[0].stat.plusMinus,
-              item.data.stats[0].splits[0].stat.points
-            ),
-          ]);
-          return null;
+        let selectedGames = item.data.stats[0].splits.splice(0, games);
+        selectedGames.forEach((game) => {
+          stats.goals += game.stat.goals;
+          stats.assists += game.stat.assists;
+          stats.plusMinus += game.stat.plusMinus;
+          stats.points += game.stat.points;
         });
+
+        setRows((rows) => [
+          ...rows,
+          {
+            name: players[i].name,
+            games: stats.games,
+            goals: stats.goals,
+            assists: stats.assists,
+            plusMinus: stats.plusMinus,
+            points: stats.points,
+          },
+        ]);
+        return null;
       });
+    });
+  };
+
+  const getSelectedDefensePlayerStats = async (games) => {
+    setDefenseRows([]);
+    const promises = [];
+
+    const getData = async (x) => {
+      const res = axios.get(
+        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=gameLog`
+      );
+      return res;
     };
-    getDefensePlayerStats();
-    getPlayerStats();
-  }, [defensePlayers, players]);
+
+    defensePlayers.forEach((element) => {
+      promises.push(getData(element.id));
+    });
+
+    await Promise.all(promises).then((results) => {
+      results.map((item, i) => {
+        const stats = {
+          games: games,
+          goals: 0,
+          assists: 0,
+          plusMinus: 0,
+          points: 0,
+        };
+
+        let selectedGames = item.data.stats[0].splits.splice(0, games);
+        selectedGames.forEach((game) => {
+          stats.goals += game.stat.goals;
+          stats.assists += game.stat.assists;
+          stats.plusMinus += game.stat.plusMinus;
+          stats.points += game.stat.points;
+        });
+
+        setDefenseRows((rows) => [
+          ...rows,
+          {
+            name: defensePlayers[i].name,
+            games: stats.games,
+            goals: stats.goals,
+            assists: stats.assists,
+            plusMinus: stats.plusMinus,
+            points: stats.points,
+          },
+        ]);
+        return null;
+      });
+    });
+  };
+
+  const getPlayerStats = async () => {
+    setRows([]);
+    const promises = [];
+
+    const getData = async (x) => {
+      const res = axios.get(
+        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
+      );
+      return res;
+    };
+
+    players.forEach((element) => {
+      promises.push(getData(element.id));
+    });
+
+    await Promise.all(promises).then((results) => {
+      results.map((item, i) => {
+        setRows((rows) => [
+          ...rows,
+          createData(
+            players[i].name,
+            item.data.stats[0].splits[0].stat.games,
+            item.data.stats[0].splits[0].stat.goals,
+            item.data.stats[0].splits[0].stat.assists,
+            item.data.stats[0].splits[0].stat.plusMinus,
+            item.data.stats[0].splits[0].stat.points
+          ),
+        ]);
+        return null;
+      });
+    });
+  };
+
+  const getDefensePlayerStats = async () => {
+    setDefenseRows([]);
+    const promises = [];
+
+    const getData = async (x) => {
+      const res = axios.get(
+        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
+      );
+      return res;
+    };
+
+    defensePlayers.forEach((element) => {
+      promises.push(getData(element.id));
+    });
+
+    await Promise.all(promises).then((results) => {
+      results.map((item, i) => {
+        setDefenseRows((rows) => [
+          ...rows,
+          createData(
+            defensePlayers[i].name,
+            item.data.stats[0].splits[0].stat.games,
+            item.data.stats[0].splits[0].stat.goals,
+            item.data.stats[0].splits[0].stat.assists,
+            item.data.stats[0].splits[0].stat.plusMinus,
+            item.data.stats[0].splits[0].stat.points
+          ),
+        ]);
+        return null;
+      });
+    });
+  };
+
+  const handleChange = (event) => {
+    let value = event.target.value;
+    setGames(value);
+  };
 
   return (
     <Container>
-      <h1>player stats</h1>
+      <div className={classes.header}>
+        <h1>player stats</h1>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="demo-simple-select-label">Games Selected</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={games}
+            onChange={handleChange}
+          >
+            <MenuItem value={1}>All</MenuItem>
+            <MenuItem value={4}>Past Four</MenuItem>
+            <MenuItem value={5}>Past Five</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+
       <div className={classes.marginBottom}>
         <h2>Offense Players</h2>
         <TableContainer component={Paper}>
