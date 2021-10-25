@@ -6,10 +6,17 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { setCurrentWeek } from '../store/AllData/allData.actions';
 
 const mapStateToProps = (state) => {
   return {
     state: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentWeek: (x) => dispatch(setCurrentWeek(x)),
   };
 };
 
@@ -18,6 +25,7 @@ function LineupMachineComponent(props) {
 
   const handleChange = (event) => {
     setWeek(event.target.value);
+    props.setCurrentWeek(event.target.value);
   };
 
   const getWeeks = () => {
@@ -53,4 +61,7 @@ function LineupMachineComponent(props) {
   );
 }
 
-export default connect(mapStateToProps)(LineupMachineComponent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LineupMachineComponent);

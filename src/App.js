@@ -13,7 +13,7 @@ import TeamSetupComponent from './pages/TeamSetup';
 import { useGetPokemonByNameQuery } from './helpers/pokemon';
 import { connect } from 'react-redux';
 
-import { setSeasonSchedule } from './store/SeasonSchedule/seasonSchedule.actions';
+import { setSeasonSchedule } from './store/AllData/allData.actions';
 
 const useStyles = makeStyles({
   stickToBottom: {

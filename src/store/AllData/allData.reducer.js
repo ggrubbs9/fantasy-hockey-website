@@ -1,7 +1,8 @@
-import { DECREMENT, SET_DATA } from './seasonSchedule.types';
+import { SET_WEEK, SET_DATA } from './allData.types';
 
 const INITIAL_STATE = {
   seasonSchedule: [],
+  currentWeek: 1,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -10,10 +11,10 @@ const reducer = (state = INITIAL_STATE, action) => {
       console.log(action);
       return { ...state, seasonSchedule: action.payload };
 
-    case DECREMENT:
+    case SET_WEEK:
       return {
         ...state,
-        count: state.count - 1,
+        currentWeek: action.payload,
       };
 
     default:
