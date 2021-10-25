@@ -1,5 +1,4 @@
 import { Container } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   TableBody,
@@ -10,24 +9,11 @@ import {
   Paper,
   TableHead,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import FormDialog from '../components/formDialog';
-import { connect } from 'react-redux';
-import {
-  useGetPokemonByNameQuery,
-  getSeasonSchedule,
-} from '../helpers/pokemon';
-import { setSeasonSchedule } from '../store/SeasonSchedule/seasonSchedule.actions';
 
 function TeamSetupComponent(props) {
-  // Using a query hook automatically fetches data and returns query values
-  const { data, error, isLoading } = useGetPokemonByNameQuery('team.stats');
-  // const { scheduleData, scheduleError, scheduleIsLoading } =
-  //   getSeasonSchedule();
-  // Individual hooks are also accessible under the generated endpoints:
-  // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
-
   const count = [
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
@@ -77,19 +63,9 @@ function TeamSetupComponent(props) {
     });
   };
 
-  // useEffect(() => {
-  //   if (!scheduleIsLoading) {
-  //     console.log(scheduleData);
-  //   }
-  // }, [scheduleData]);
-
   useEffect(() => {
     searchPlayerID('Patrick Kane');
   }, []);
-
-  useEffect(() => {
-    //console.log(playerID);
-  }, [playerID]);
 
   const handleClick = (e) => {
     console.log(e);

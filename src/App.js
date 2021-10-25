@@ -47,11 +47,11 @@ function App(props) {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log(data);
+      console.log(data, error);
       console.log(props);
       props.setSeasonSchedule(data);
     }
-  }, [data]);
+  }, [isLoading]);
 
   return (
     <Router>

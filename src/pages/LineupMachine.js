@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Container } from '@material-ui/core';
 import Box from '@mui/material/Box';
@@ -23,7 +23,11 @@ function LineupMachineComponent(props) {
   const getWeeks = () => {
     let content = [];
     for (let i = 1; i < 25; i++) {
-      content.push(<MenuItem value={i}>Week {i}</MenuItem>);
+      content.push(
+        <MenuItem key={i} value={i}>
+          Week {i}
+        </MenuItem>
+      );
     }
     return content;
   };

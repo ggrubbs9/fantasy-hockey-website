@@ -1,17 +1,5 @@
-import { FETCH_DATA, DECREMENT } from './seasonSchedule.types';
+import { SET_DATA } from './seasonSchedule.types';
 import axios from 'axios';
-
-const getRepoDetailsStarted = () => ({
-  type: 'repoDetails/fetchStarted',
-});
-const getRepoDetailsSuccess = (repoDetails) => ({
-  type: 'repoDetails/fetchSucceeded',
-  payload: repoDetails,
-});
-const getRepoDetailsFailed = (error) => ({
-  type: 'repoDetails/fetchFailed',
-  error,
-});
 
 export const getSeasonSchedule = async (dispatch) => {
   return (dispatch) =>
@@ -27,13 +15,7 @@ export const getSeasonSchedule = async (dispatch) => {
 
 export const setSeasonSchedule = (data) => {
   return {
-    type: 'SET_DATA',
+    type: SET_DATA,
     payload: data,
-  };
-};
-
-export const decreaseCounter = () => {
-  return {
-    type: DECREMENT,
   };
 };

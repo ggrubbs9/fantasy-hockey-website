@@ -1,4 +1,4 @@
-import { DECREMENT, FETCH_DATA, SET_DATA } from './seasonSchedule.types';
+import { DECREMENT, SET_DATA } from './seasonSchedule.types';
 
 const INITIAL_STATE = {
   seasonSchedule: [],
