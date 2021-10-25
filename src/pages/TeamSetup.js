@@ -14,27 +14,19 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import FormDialog from '../components/formDialog';
 import { connect } from 'react-redux';
-
 import {
-  increaseCounter,
-  decreaseCounter,
-} from '../store/Counter/counter.actions';
-
-const mapStateToProps = (state) => {
-  return {
-    count: state.counter.count,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    increaseCounter: () => dispatch(increaseCounter()),
-
-    decreaseCounter: () => dispatch(decreaseCounter()),
-  };
-};
+  useGetPokemonByNameQuery,
+  getSeasonSchedule,
+} from '../helpers/pokemon';
 
 function TeamSetupComponent(props) {
+  // Using a query hook automatically fetches data and returns query values
+  const { data, error, isLoading } = useGetPokemonByNameQuery('team.stats');
+  // const { scheduleData, scheduleError, scheduleIsLoading } =
+  //   getSeasonSchedule();
+  // Individual hooks are also accessible under the generated endpoints:
+  // const { data, error, isLoading } = pokemonApi.endpoints.getPokemonByName.useQuery('bulbasaur')
+
   const count = [
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
@@ -84,6 +76,16 @@ function TeamSetupComponent(props) {
     });
   };
 
+  // useEffect(() => {
+  //   if (!scheduleIsLoading) {
+  //     console.log(scheduleData);
+  //   }
+  // }, [scheduleData]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   useEffect(() => {
     searchPlayerID('Patrick Kane');
   }, []);
@@ -131,15 +133,8 @@ function TeamSetupComponent(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <div>
-        <div>Count: {props.count}</div>
-
-        <button onClick={() => props.increaseCounter()}>Increase Count</button>
-
-        <button onClick={() => props.decreaseCounter()}>Decrease Count</button>
-      </div>
     </Container>
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamSetupComponent);
+export default TeamSetupComponent;

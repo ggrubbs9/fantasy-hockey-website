@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-function App() {
+function App(props) {
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 
