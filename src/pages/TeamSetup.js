@@ -18,6 +18,7 @@ import {
   useGetPokemonByNameQuery,
   getSeasonSchedule,
 } from '../helpers/pokemon';
+import { setSeasonSchedule } from '../store/SeasonSchedule/seasonSchedule.actions';
 
 function TeamSetupComponent(props) {
   // Using a query hook automatically fetches data and returns query values
@@ -83,15 +84,11 @@ function TeamSetupComponent(props) {
   // }, [scheduleData]);
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
     searchPlayerID('Patrick Kane');
   }, []);
 
   useEffect(() => {
-    console.log(playerID);
+    //console.log(playerID);
   }, [playerID]);
 
   const handleClick = (e) => {
@@ -99,7 +96,7 @@ function TeamSetupComponent(props) {
   };
 
   const dialogCallback = (childData) => {
-    console.log(childData);
+    //console.log(childData);
   };
 
   return (

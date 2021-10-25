@@ -10,6 +10,10 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
+import { useGetPokemonByNameQuery } from './helpers/pokemon';
+import { connect } from 'react-redux';
+
+import { setSeasonSchedule } from './store/SeasonSchedule/seasonSchedule.actions';
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -20,13 +24,34 @@ const useStyles = makeStyles({
   },
 });
 
+const mapStateToProps = (state) => {
+  return {
+    count: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setSeasonSchedule: (x) => dispatch(setSeasonSchedule(x)),
+  };
+};
+
 function App(props) {
+  const { data, error, isLoading } = useGetPokemonByNameQuery('team.stats');
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 
   function Dashboard() {
     return <h2>Users</h2>;
   }
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(data);
+      console.log(props);
+      props.setSeasonSchedule(data);
+    }
+  }, [data]);
 
   return (
     <Router>
@@ -100,4 +125,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

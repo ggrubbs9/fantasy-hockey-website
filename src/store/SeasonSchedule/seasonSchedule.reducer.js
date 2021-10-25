@@ -1,16 +1,14 @@
-import { DECREMENT, FETCH_DATA } from './seasonSchedule.types';
+import { DECREMENT, FETCH_DATA, SET_DATA } from './seasonSchedule.types';
 
 const INITIAL_STATE = {
   seasonSchedule: [],
-  count: 0,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
-  console.log(action);
   switch (action.type) {
-    case FETCH_DATA:
-      console.log(action.payload.data);
-      return [action.payload.data, ...state];
+    case SET_DATA:
+      console.log(action);
+      return { ...state, seasonSchedule: action.payload };
 
     case DECREMENT:
       return {

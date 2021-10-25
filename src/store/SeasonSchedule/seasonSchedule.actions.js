@@ -25,6 +25,13 @@ export const getSeasonSchedule = async (dispatch) => {
       });
 };
 
+export const setSeasonSchedule = (data) => {
+  return {
+    type: 'SET_DATA',
+    payload: data,
+  };
+};
+
 export const decreaseCounter = () => {
   return {
     type: DECREMENT,

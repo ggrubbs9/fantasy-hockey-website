@@ -1,11 +1,52 @@
+import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { Container } from '@material-ui/core';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-function LineupMachineComponent() {
+const mapStateToProps = (state) => {
+  return {
+    state: state,
+  };
+};
+
+function LineupMachineComponent(props) {
+  const [week, setWeek] = useState('');
+
+  const handleChange = (event) => {
+    setWeek(event.target.value);
+  };
+
+  const getWeeks = () => {
+    let content = [];
+    for (let i = 1; i < 25; i++) {
+      content.push(<MenuItem value={i}>Week {i}</MenuItem>);
+    }
+    return content;
+  };
+
   return (
     <Container maxWidth="sm">
       <h1>hi</h1>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Week</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={week}
+            label="Week"
+            onChange={handleChange}
+          >
+            {getWeeks()}
+          </Select>
+        </FormControl>
+      </Box>
     </Container>
   );
 }
 
-export default LineupMachineComponent;
+export default connect(mapStateToProps)(LineupMachineComponent);
