@@ -10,7 +10,7 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
-import { useGetPokemonByNameQuery } from './helpers/pokemon';
+import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
 
 import { setSeasonSchedule } from './store/AllData/allData.actions';
@@ -37,7 +37,11 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function App(props) {
-  const { data, error, isLoading } = useGetPokemonByNameQuery('team.stats');
+  const { data, error, isLoading } = useGetNHLStatsQuery([
+    'teams',
+    'expand',
+    'team.stats',
+  ]);
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 

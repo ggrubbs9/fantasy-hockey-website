@@ -13,3 +13,10 @@ export const setCurrentWeek = (data) => {
     payload: data,
   };
 };
+
+export const setNHLSchedule = (data) => {
+  return {
+    type: SET_WEEK,
+    payload: data,
+  };
+};
