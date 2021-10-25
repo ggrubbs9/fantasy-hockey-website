@@ -9,6 +9,7 @@ import CachedIcon from '@material-ui/icons/Cached';
 import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
+import TeamSetupComponent from './pages/TeamSetup';
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -50,6 +51,9 @@ function App() {
           <Route path="/player-pickup">
             <PlayerPickupComponent />
           </Route>
+          <Route path="/team-setup">
+            <TeamSetupComponent />
+          </Route>
         </Switch>
 
         <BottomNavigation
@@ -82,6 +86,12 @@ function App() {
             component={Link}
             to="/player-pickup"
             label="Player Pickup"
+            icon={<CachedIcon />}
+          />
+          <BottomNavigationAction
+            component={Link}
+            to="/team-setup"
+            label="Team Setup"
             icon={<CachedIcon />}
           />
         </BottomNavigation>
