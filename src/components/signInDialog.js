@@ -6,7 +6,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithPopup,
+  signInWithCredential,
+  GoogleAuthProvider,
+} from 'firebase/auth';
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getByDisplayValue } from '@testing-library/dom';
 
 const provider = new GoogleAuthProvider();
 
@@ -27,6 +34,17 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
     setName(event.target.value);
   };
 
+  const getDB = async (x) => {
+    const db = getFirestore();
+
+    const citiesCol = collection(db, 'users');
+    console.log(citiesCol);
+    const citySnapshot = await getDocs(citiesCol);
+    const cityList = citySnapshot.docs.map((doc) => doc.data());
+
+    console.log(cityList);
+  };
+
   const googleSignIn = () => {
     const auth = getAuth();
 
@@ -38,12 +56,14 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
         // The signed-in user info.
         const user = result.user;
 
+        getDB();
+
         //TODO: store token in local storage? Not sure about this one.
 
         // TODO: On sign in check database to see if the person exists. If not, direct them to fill out a roster (optional) and other details
         // If person exists, pull database data to state
-        console.log(token)
-        console.log(result)
+        console.log(token);
+        console.log(result);
         // ...
       })
       .catch((error) => {
