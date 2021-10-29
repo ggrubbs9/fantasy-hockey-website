@@ -10,6 +10,8 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
+import SignInDialog from './components/signInDialog';
+// import firebase from "firebase";
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -27,6 +29,14 @@ function App() {
   function Dashboard() {
     return <h2>Users</h2>;
   }
+
+  const handleClick = (e) => {
+    console.log(e);
+  };
+
+  const dialogCallback = (childData) => {
+    console.log(childData);
+  };
 
   return (
     <Router>
@@ -93,6 +103,10 @@ function App() {
             to="/team-setup"
             label="Team Setup"
             icon={<CachedIcon />}
+          />
+          <SignInDialog
+            parentCallback={dialogCallback}
+            handleClickOpen={handleClick}
           />
         </BottomNavigation>
       </div>
