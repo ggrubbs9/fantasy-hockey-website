@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Container } from '@material-ui/core';
 import MaterialTable from 'material-table';
-import ScheduleGridComponent from '../components/scheduleGrid.js';
+import './scheduleGrid.scss'
 
-function LineupMachineComponent() {
+function ScheduleGridComponent() {
   const [players] = useState([
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
@@ -24,12 +24,26 @@ function LineupMachineComponent() {
     { name: 'Adam Fox', id: '8479323' },
     { name: 'Rasmus Ristolainen', id: '8477499' },
   ]);
+  const [dates] = useState([
+    { day: '10/24/21', type: '' },
+    { day: '10/25/21', type: '' },
+    { day: '10/26/21', type: '' },
+    { day: '10/27/21', type: '' },
+    { day: '10/28/21', type: '' },
+    { day: '10/29/21', type: '' },
+    { day: '10/30/21', type: '' },
+  ]);
   return (
-    <Container maxWidth="xl">
-      <h1>hi</h1>
-      <ScheduleGridComponent />
-    </Container>
+    <div className="tableContainer">
+      <div className={"row"+' '+"columnNames"}>
+        {dates.map((date, i) => (
+          <div key={i} className={"col-xs"+" "+"columnName"}>
+            <div className="box">{date.day}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
-export default LineupMachineComponent;
+export default ScheduleGridComponent;
