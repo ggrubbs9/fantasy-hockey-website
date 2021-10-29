@@ -14,7 +14,7 @@ To Build App:
 
 To Deploy App: 
 
-`firebase deploy --only hosting
+`firebase deploy --only hosting`
 
 In the project directory, you can run:
 
