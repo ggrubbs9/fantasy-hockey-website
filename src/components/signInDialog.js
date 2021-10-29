@@ -37,6 +37,11 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
+
+        //TODO: store token in local storage? Not sure about this one.
+
+        // TODO: On sign in check database to see if the person exists. If not, direct them to fill out a roster (optional) and other details
+        // If person exists, pull database data to state
         console.log(token)
         console.log(result)
         // ...
