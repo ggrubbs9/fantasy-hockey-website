@@ -9,11 +9,19 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {
   getAuth,
   signInWithPopup,
-  signInWithCredential,
   GoogleAuthProvider,
 } from 'firebase/auth';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-import { getByDisplayValue } from '@testing-library/dom';
+import {
+  getFirestore,
+  collection,
+  query,
+  getDocs,
+  where,
+} from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
+import { doc, setDoc } from "firebase/firestore"; 
+
+
 
 const provider = new GoogleAuthProvider();
 
@@ -34,15 +42,26 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
     setName(event.target.value);
   };
 
-  const getDB = async (x) => {
+  const getDB = async (email) => {
     const db = getFirestore();
+    const q = query(collection(db, 'users'), where('email', '==', `${email}`));
 
-    const citiesCol = collection(db, 'users');
-    console.log(citiesCol);
-    const citySnapshot = await getDocs(citiesCol);
-    const cityList = citySnapshot.docs.map((doc) => doc.data());
+    const querySnapshot = await getDocs(q);
 
-    console.log(cityList);
+    if (querySnapshot.empty){
+     // email does not exist
+     const usersRef = collection(db, 'users');
+     await setDoc(doc(usersRef, `${uuidv4()}`), {
+      id: `${uuidv4()}`,
+      email: `${email}`});
+    } else {
+     // email does exist
+     console.log('does exist')
+    }
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, ' => ', doc.data());
+    });
   };
 
   const googleSignIn = () => {
@@ -55,8 +74,9 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
+        console.log(user)
 
-        getDB();
+        getDB(user.email);
 
         //TODO: store token in local storage? Not sure about this one.
 
@@ -74,6 +94,7 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
         const email = error.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode, errorMessage, email, credential)
         // ...
       });
   };
