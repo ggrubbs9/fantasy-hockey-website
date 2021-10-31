@@ -1,7 +1,37 @@
 import { Container } from '@material-ui/core';
-import ScheduleGridComponent from '../components/scheduleGrid.js';
+import { useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import ScheduleGridComponent from '../components/lineupMachineTable';
+
+const Styles = styled.div`
+  padding: 1rem;
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`;
 
 function LineupMachineComponent() {
+  const [currentWeek] = useState(3);
+  const [columns, setColumns] = useState([]);
+
   // const [players] = useState([
   //   { name: 'Alex Ovechkin', id: '8471214' },
   //   { name: 'Mika Zibanejad', id: '8476459' },
@@ -22,10 +52,217 @@ function LineupMachineComponent() {
   //   { name: 'Adam Fox', id: '8479323' },
   //   { name: 'Rasmus Ristolainen', id: '8477499' },
   // ]);
+  const fantasyWeekList = [
+    {
+      id: 1,
+      name: 'Week 1',
+      startDate: '10/17/21',
+      endDate: '10/23/21',
+    },
+    {
+      id: 2,
+      name: 'Week 2',
+      startDate: '10/24/21',
+      endDate: '10/30/21',
+    },
+    {
+      id: 3,
+      name: 'Week 3',
+      startDate: '10/31/21',
+      endDate: '11/6/21',
+    },
+    {
+      id: 4,
+      name: 'Week 4',
+      startDate: '11/7/21',
+      endDate: '11/13/21',
+    },
+    {
+      id: 5,
+      name: 'Week 5',
+      startDate: '11/14/21',
+      endDate: '11/20/21',
+    },
+    {
+      id: 6,
+      name: 'Week 6',
+      startDate: '11/21/21',
+      endDate: '11/27/21',
+    },
+    {
+      id: 7,
+      name: 'Week 7',
+      startDate: '11/28/21',
+      endDate: '12/4/21',
+    },
+    {
+      id: 8,
+      name: 'Week 8',
+      startDate: '12/5/21',
+      endDate: '12/11/21',
+    },
+    {
+      id: 9,
+      name: 'Week 9',
+      startDate: '12/12/21',
+      endDate: '12/18/21',
+    },
+    {
+      id: 10,
+      name: 'Week 10',
+      startDate: '12/19/12',
+      endDate: '12/23/21',
+    },
+    {
+      id: 11,
+      name: 'Week 11',
+      startDate: '12/27/21',
+      endDate: '1/1/22',
+    },
+    {
+      id: 12,
+      name: 'Week 12',
+      startDate: '1/2/22',
+      endDate: '1/8/22',
+    },
+    {
+      id: 13,
+      name: 'Week 13',
+      startDate: '1/9/22',
+      endDate: '1/15/22',
+    },
+    {
+      id: 14,
+      name: 'Week 14',
+      startDate: '1/16/22',
+      endDate: '1/22/22',
+    },
+    {
+      id: 15,
+      name: 'Week 15',
+      startDate: '1/23/22',
+      endDate: '1/29/22',
+    },
+    {
+      id: 16,
+      name: 'Week 16',
+      startDate: '1/30/22',
+      endDate: '2/26/22',
+    },
+    {
+      id: 17,
+      name: 'Week 17',
+      startDate: '2/27/22',
+      endDate: '3/5/22',
+    },
+    {
+      id: 18,
+      name: 'Week 18',
+      startDate: '3/6/22',
+      endDate: '3/12/22',
+    },
+    {
+      id: 19,
+      name: 'Week 19',
+      startDate: '3/13/22',
+      endDate: '3/19/22',
+    },
+    {
+      id: 20,
+      name: 'Week 20',
+      startDate: '3/20/22',
+      endDate: '3/26/22',
+    },
+    {
+      id: 21,
+      name: 'Week 21',
+      startDate: '3/27/22',
+      endDate: '4/2/22',
+    },
+    {
+      id: 22,
+      name: 'Week 22',
+      startDate: '4/3/22',
+      endDate: '4/9/22',
+    },
+    {
+      id: 23,
+      name: 'Week 23',
+      startDate: '4/10/22',
+      endDate: '4/16/22',
+    },
+    {
+      id: 24,
+      name: 'Week 24',
+      startDate: '4/17/22',
+      endDate: '4/18/22',
+    },
+  ];
+
+  const getDaysArray = (start, end) => {
+    for (
+      var arr = [], dt = new Date(start);
+      dt <= end;
+      dt.setDate(dt.getDate() + 1)
+    ) {
+      arr.push(new Date(dt));
+    }
+    return arr;
+  };
+
+  useEffect(() => {
+    const createDaylist = () => {
+      let weekObject = fantasyWeekList.find((x) => x.id === currentWeek);
+      var daylist = getDaysArray(
+        new Date(weekObject.startDate),
+        new Date(weekObject.endDate)
+      );
+      daylist.map((v) => v.toISOString().slice(0, 10)).join('');
+      createColumnData(daylist);
+    };
+    createDaylist();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const createColumnData = (daylist) => {
+    // eslint-disable-next-line array-callback-return
+    daylist.map((week, i) => {
+      setColumns((columns) => [
+        ...columns,
+        {
+          Header: week.toLocaleDateString('en-US'),
+          accessor: `week${i + 1}`,
+        },
+      ]);
+    });
+  };
+
+  const headers = useMemo(() => columns, [columns]);
+
+  const data = useMemo(
+    () => [
+      {
+        col1: 'Hello',
+        col2: 'World',
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks',
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want',
+      },
+    ],
+    []
+  );
+
   return (
     <Container maxWidth="xl">
       <h1>hi</h1>
-      <ScheduleGridComponent />
+      <Styles>
+        <ScheduleGridComponent columns={headers} data={data} />
+      </Styles>
     </Container>
   );
 }

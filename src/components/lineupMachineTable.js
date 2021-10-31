@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useTable } from 'react-table';
 import './scheduleGrid.scss';
 
-function ScheduleGridComponent() {
+function ScheduleGridComponent({ columns, data }) {
   // const [players] = useState([
   //   { name: 'Alex Ovechkin', id: '8471214' },
   //   { name: 'Mika Zibanejad', id: '8476459' },
@@ -22,25 +22,37 @@ function ScheduleGridComponent() {
   //   { name: 'Adam Fox', id: '8479323' },
   //   { name: 'Rasmus Ristolainen', id: '8477499' },
   // ]);
-  const [dates] = useState([
-    { day: '10/24/21', type: '' },
-    { day: '10/25/21', type: '' },
-    { day: '10/26/21', type: '' },
-    { day: '10/27/21', type: '' },
-    { day: '10/28/21', type: '' },
-    { day: '10/29/21', type: '' },
-    { day: '10/30/21', type: '' },
-  ]);
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({
+      columns,
+      data,
+    });
+
   return (
-    <div className="tableContainer">
-      <div className={'row columnNames'}>
-        {dates.map((date, i) => (
-          <div key={i} className={'col-xs columnName'}>
-            <div className="box">{date.day}</div>
-          </div>
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            ))}
+          </tr>
         ))}
-      </div>
-    </div>
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row, i) => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map((cell) => {
+                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
 
