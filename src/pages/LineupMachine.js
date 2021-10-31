@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import { Container } from '@material-ui/core';
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -31,6 +33,27 @@ const Styles = styled.div`
 function LineupMachineComponent() {
   const [currentWeek] = useState(3);
   const [columns, setColumns] = useState([]);
+  const [rows, setRows] = useState([]);
+
+  const playerList = [
+    { name: 'Alex Ovechkin', id: '8471214', pos: 'F' },
+    { name: 'Mika Zibanejad', id: '8476459', pos: 'F' },
+    { name: 'Jonathan Huberdeau', id: '8476456', pos: 'F' },
+    { name: 'Jake Guentzel', id: '8477404', pos: 'F' },
+    { name: 'Ryan Nugent-Hopkins', id: '8476454', pos: 'F' },
+    { name: 'J.T. Miller', id: '8476468', pos: 'F' },
+    { name: 'Filip Forsberg', id: '8476887', pos: 'F' },
+    { name: 'Brady Tkachuk', id: '8480801', pos: 'F' },
+    { name: 'Max Domi', id: '8477503', pos: 'F' },
+    { name: 'Chris Kreider', id: '8475184', pos: 'F' },
+
+    { name: 'Brent Burns', id: '8470613', pos: 'D' },
+    { name: 'Ryan Pulock', id: '8477506', pos: 'D' },
+    { name: 'Mark Giordano', id: '8470966', pos: 'D' },
+    { name: 'Quinn Hughes', id: '8480800', pos: 'D' },
+    { name: 'Adam Fox', id: '8479323', pos: 'D' },
+    { name: 'Rasmus Ristolainen', id: '8477499', pos: 'D' },
+  ];
 
   // const [players] = useState([
   //   { name: 'Alex Ovechkin', id: '8471214' },
@@ -221,7 +244,7 @@ function LineupMachineComponent() {
       createColumnData(daylist);
     };
     createDaylist();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const createColumnData = (daylist) => {
@@ -231,31 +254,45 @@ function LineupMachineComponent() {
         ...columns,
         {
           Header: week.toLocaleDateString('en-US'),
-          accessor: `week${i + 1}`,
+          accessor: `day${i + 1}`,
         },
       ]);
     });
   };
 
+  const checkIfPlaying = (player, column) => {
+    // get player team
+    // check if team plays on given date on NHL schedule
+    // return away/home as @ or '' and show opponent
+    let x = '@CHI';
+    return x;
+  };
+
+  const createRowData = () => {
+    //for each column
+    let array = [];
+    playerList.map((player) => {
+      //for each player
+      let object = {};
+      columns.map((cl) => {
+        console.log(player, cl);
+        let check = checkIfPlaying(player, cl);
+        console.log(check);
+        object = { ...object, [cl.accessor]: check };
+      });
+      array.push(object);
+    });
+    setRows(array);
+  };
+
+  useEffect(() => {
+    if (columns.length) {
+      createRowData();
+    }
+  }, [columns]);
   const headers = useMemo(() => columns, [columns]);
 
-  const data = useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-    ],
-    []
-  );
+  const data = useMemo(() => rows, [rows]);
 
   return (
     <Container maxWidth="xl">
