@@ -275,9 +275,7 @@ function LineupMachineComponent() {
       //for each player
       let object = {};
       columns.map((cl) => {
-        console.log(player, cl);
         let check = checkIfPlaying(player, cl);
-        console.log(check);
         object = { ...object, [cl.accessor]: check };
       });
       array.push(object);

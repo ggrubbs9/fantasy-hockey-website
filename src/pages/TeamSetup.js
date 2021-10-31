@@ -75,7 +75,6 @@ function TeamSetupComponent(props) {
         const roster = team.roster.roster;
         roster.forEach((rosterPlayer) => {
           if (rosterPlayer.person.fullName === player) {
-            console.log(rosterPlayer);
             setPlayerID(rosterPlayer.person.id);
           }
         });
