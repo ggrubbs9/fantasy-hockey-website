@@ -1,6 +1,7 @@
-import { SET_WEEK, SET_DATA } from './allData.types';
+import { SET_WEEK, SET_DATA, SET_NHL_SCHEDULE } from './allData.types';
 
 const INITIAL_STATE = {
+  teamData: [],
   seasonSchedule: [],
   currentWeek: 1,
 };
@@ -8,13 +9,19 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SET_DATA:
-      console.log(action);
-      return { ...state, seasonSchedule: action.payload };
+      return { ...state, teamData: action.payload };
 
     case SET_WEEK:
       return {
         ...state,
         currentWeek: action.payload,
+      };
+
+    case SET_NHL_SCHEDULE:
+      console.log(action);
+      return {
+        ...state,
+        seasonSchedule: action.payload,
       };
 
     default:

@@ -13,7 +13,7 @@ import TeamSetupComponent from './pages/TeamSetup';
 import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
 
-import { setSeasonSchedule } from './store/AllData/allData.actions';
+import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -32,16 +32,19 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setSeasonSchedule: (x) => dispatch(setSeasonSchedule(x)),
+    setTeamStats: (x) => dispatch(setTeamStats(x)),
+    setNHLSchedule: (x) => dispatch(setNHLSchedule(x)),
   };
 };
 
 function App(props) {
   const { data, error, isLoading } = useGetNHLStatsQuery([
-    'teams',
+    'schedule',
     'expand',
-    'team.stats',
+    '20212022',
   ]);
+  // const { scheduleData, scheduleError, scheduleIsLoading } =
+  //   useGetNHLStatsQuery(['schedule', 'expand', '20212022']);
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 
@@ -51,11 +54,12 @@ function App(props) {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log(data, error);
+      console.log(data);
       console.log(props);
-      props.setSeasonSchedule(data);
+      // props.setTeamStats(data);
+      props.setNHLSchedule();
     }
-  }, [isLoading]);
+  }, [data]);
 
   return (
     <Router>
