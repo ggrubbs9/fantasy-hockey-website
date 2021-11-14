@@ -52,14 +52,16 @@ const Styles = styled.div`
 `;
 
 function LineupMachineComponent(props) {
-  const [currentWeek] = useState(3);
+  const [currentWeek, setCurrentWeek] = useState(3);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
 
-  const [week, setWeek] = useState('');
-
   const handleChange = (event) => {
-    setWeek(event.target.value);
+    console.log(event);
+
+    //sets week in page
+    setCurrentWeek(event.target.value);
+    //sets week in store
     props.setCurrentWeek(event.target.value);
   };
 
@@ -285,15 +287,16 @@ function LineupMachineComponent(props) {
     };
     createDaylist();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentWeek]);
 
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
-    daylist.map((week, i) => {
+    setColumns([]);
+    daylist.map((currentWeek, i) => {
       setColumns((columns) => [
         ...columns,
         {
-          Header: week.toLocaleDateString('en-US'),
+          Header: currentWeek.toLocaleDateString('en-US'),
           accessor: `day${i + 1}`,
         },
       ]);
@@ -315,9 +318,7 @@ function LineupMachineComponent(props) {
       //for each player
       let object = {};
       columns.map((cl) => {
-        console.log(player, cl);
         let check = checkIfPlaying(player, cl);
-        console.log(check);
         object = { ...object, [cl.accessor]: check };
       });
       array.push(object);
@@ -344,7 +345,7 @@ function LineupMachineComponent(props) {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={week}
+            value={currentWeek}
             label="Week"
             onChange={handleChange}
           >

@@ -34,40 +34,39 @@ function TeamSetupComponent(props) {
     { name: 'Rasmus Ristolainen', id: '8477499' },
   ];
 
-  const [playerID, setPlayerID] = useState([]);
-
-  const searchPlayerID = async (player) => {
-    const promises = [];
-
-    const getData = () => {
-      const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster`
-      );
-      return res;
-    };
-
-    promises.push(getData());
-
-    await Promise.all(promises).then((results) => {
-      const teams = results[0].data.teams;
-
-      teams.forEach((team) => {
-        const roster = team.roster.roster;
-        roster.forEach((rosterPlayer) => {
-          if (rosterPlayer.person.fullName === player) {
-            setPlayerID(rosterPlayer.person.id);
-          }
-        });
-      });
-    });
-  };
+  const [setPlayerID] = useState([]);
 
   useEffect(() => {
+    const searchPlayerID = async (player) => {
+      const promises = [];
+
+      const getData = () => {
+        const res = axios.get(
+          `https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster`
+        );
+        return res;
+      };
+
+      promises.push(getData());
+
+      await Promise.all(promises).then((results) => {
+        const teams = results[0].data.teams;
+
+        teams.forEach((team) => {
+          const roster = team.roster.roster;
+          roster.forEach((rosterPlayer) => {
+            if (rosterPlayer.person.fullName === player) {
+              setPlayerID(rosterPlayer.person.id);
+            }
+          });
+        });
+      });
+    };
     searchPlayerID('Patrick Kane');
-  }, []);
+  }, [setPlayerID]);
 
   const handleClick = (e) => {
-    console.log(e);
+    // console.log(e);
   };
 
   const dialogCallback = (childData) => {

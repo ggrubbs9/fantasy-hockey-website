@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTable } from 'react-table';
 import './scheduleGrid.scss';
 
@@ -28,6 +29,10 @@ function ScheduleGridComponent({ columns, data }) {
       columns,
       data,
     });
+
+  useEffect(() => {
+    // console.log(columns, data);
+  });
 
   // Render the UI for your table
   return (

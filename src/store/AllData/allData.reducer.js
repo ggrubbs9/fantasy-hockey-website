@@ -18,7 +18,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       };
 
     case SET_NHL_SCHEDULE:
-      console.log(action);
+      // console.log(action);
       return {
         ...state,
         seasonSchedule: action.payload,

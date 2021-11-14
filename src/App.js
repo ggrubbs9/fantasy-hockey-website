@@ -19,7 +19,6 @@ import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
 import SignInDialog from './components/signInDialog';
 // import firebase from "firebase";
 
-
 const useStyles = makeStyles({
   stickToBottom: {
     width: '100%',
@@ -57,24 +56,22 @@ function App(props) {
     return <h2>Users</h2>;
   }
 
-
   useEffect(() => {
     if (!isLoading) {
-      console.log(data);
-      console.log(props);
+      // console.log(data);
+      // console.log(props);
       // props.setTeamStats(data);
       props.setNHLSchedule();
     }
-  }, [data]);
+  }, [isLoading]);
 
   const handleClick = (e) => {
-    console.log(e);
+    // console.log(e);
   };
 
   const dialogCallback = (childData) => {
-    console.log(childData);
+    // console.log(childData);
   };
-
 
   return (
     <Router>

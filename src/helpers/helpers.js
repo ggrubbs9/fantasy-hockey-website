@@ -15,7 +15,7 @@ export const getPlayerStats = async (players) => {
   });
 
   await Promise.all(promises).then((results) => {
-    console.log('done', results);
+    // console.log('done', results);
     return results;
   });
 };
