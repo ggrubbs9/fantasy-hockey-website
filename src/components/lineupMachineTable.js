@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useTable } from 'react-table';
 import './scheduleGrid.scss';
 
