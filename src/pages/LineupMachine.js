@@ -47,7 +47,7 @@ function LineupMachineComponent(props) {
 import { Container } from '@material-ui/core';
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import ScheduleGridComponent from '../components/lineupMachineTable.js';
+import ScheduleGridComponent from '../components/lineupMachineTable';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -319,7 +319,9 @@ function LineupMachineComponent() {
       //for each player
       let object = {};
       columns.map((cl) => {
+        console.log(player, cl);
         let check = checkIfPlaying(player, cl);
+        console.log(check);
         object = { ...object, [cl.accessor]: check };
       });
       array.push(object);
