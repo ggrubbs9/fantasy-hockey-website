@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
@@ -10,8 +10,15 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
+
+import { useGetNHLStatsQuery } from './helpers/NHLApi';
+import { connect } from 'react-redux';
+
+import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
+
 import SignInDialog from './components/signInDialog';
 // import firebase from "firebase";
+
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -22,13 +29,43 @@ const useStyles = makeStyles({
   },
 });
 
-function App() {
+const mapStateToProps = (state) => {
+  return {
+    count: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setTeamStats: (x) => dispatch(setTeamStats(x)),
+    setNHLSchedule: (x) => dispatch(setNHLSchedule(x)),
+  };
+};
+
+function App(props) {
+  const { data, error, isLoading } = useGetNHLStatsQuery([
+    'schedule',
+    'expand',
+    '20212022',
+  ]);
+  // const { scheduleData, scheduleError, scheduleIsLoading } =
+  //   useGetNHLStatsQuery(['schedule', 'expand', '20212022']);
   const [value, setValue] = React.useState(0);
   const classes = useStyles();
 
   function Dashboard() {
     return <h2>Users</h2>;
   }
+
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(data);
+      console.log(props);
+      // props.setTeamStats(data);
+      props.setNHLSchedule();
+    }
+  }, [data]);
 
   const handleClick = (e) => {
     console.log(e);
@@ -37,6 +74,7 @@ function App() {
   const dialogCallback = (childData) => {
     console.log(childData);
   };
+
 
   return (
     <Router>
@@ -114,4 +152,4 @@ function App() {
   );
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

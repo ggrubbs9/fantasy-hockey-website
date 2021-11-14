@@ -9,29 +9,9 @@ import {
   Paper,
   TableHead,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import FormDialog from '../components/formDialog';
-import { connect } from 'react-redux';
-
-import {
-  increaseCounter,
-  decreaseCounter,
-} from '../store/Counter/counter.actions';
-
-const mapStateToProps = (state) => {
-  return {
-    count: state.counter.count,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    increaseCounter: () => dispatch(increaseCounter()),
-
-    decreaseCounter: () => dispatch(decreaseCounter()),
-  };
-};
 
 function TeamSetupComponent(props) {
   const count = [
@@ -86,16 +66,12 @@ function TeamSetupComponent(props) {
     searchPlayerID('Patrick Kane');
   }, []);
 
-  useEffect(() => {
-    console.log(playerID);
-  }, [playerID]);
-
   const handleClick = (e) => {
     console.log(e);
   };
 
   const dialogCallback = (childData) => {
-    console.log(childData);
+    //console.log(childData);
   };
 
   return (
@@ -129,15 +105,8 @@ function TeamSetupComponent(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <div>
-        <div>Count: {props.count}</div>
-
-        <button onClick={() => props.increaseCounter()}>Increase Count</button>
-
-        <button onClick={() => props.decreaseCounter()}>Decrease Count</button>
-      </div>
     </Container>
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamSetupComponent);
+export default TeamSetupComponent;

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import counterReducer from './Counter/counter.reducer';
+import NHLDataReducer from './AllData/allData.reducer';
 
 const rootReducer = combineReducers({
-  counter: counterReducer,
+  NHLDataReducer: NHLDataReducer,
 });
 
 export default rootReducer;
