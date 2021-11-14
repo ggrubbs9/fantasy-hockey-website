@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Container } from '@material-ui/core';
@@ -8,6 +7,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { setCurrentWeek } from '../store/AllData/allData.actions';
+import { useEffect, useMemo } from 'react';
+import styled from 'styled-components';
+import ScheduleGridComponent from '../components/lineupMachineTable.js';
 
 const mapStateToProps = (state) => {
   return {
@@ -21,33 +23,8 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-function LineupMachineComponent(props) {
-  const [week, setWeek] = useState('');
-
-  const handleChange = (event) => {
-    setWeek(event.target.value);
-    props.setCurrentWeek(event.target.value);
-  };
-
-  const getWeeks = () => {
-    let content = [];
-    for (let i = 1; i < 25; i++) {
-      content.push(
-        <MenuItem key={i} value={i}>
-          Week {i}
-        </MenuItem>
-      );
-    }
-    return content;
-  };
-
-=======
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-import { Container } from '@material-ui/core';
-import { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import ScheduleGridComponent from '../components/lineupMachineTable.js';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -74,10 +51,29 @@ const Styles = styled.div`
   }
 `;
 
-function LineupMachineComponent() {
+function LineupMachineComponent(props) {
   const [currentWeek] = useState(3);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+
+  const [week, setWeek] = useState('');
+
+  const handleChange = (event) => {
+    setWeek(event.target.value);
+    props.setCurrentWeek(event.target.value);
+  };
+
+  const getWeeks = () => {
+    let content = [];
+    for (let i = 1; i < 25; i++) {
+      content.push(
+        <MenuItem key={i} value={i}>
+          Week {i}
+        </MenuItem>
+      );
+    }
+    return content;
+  };
 
   const playerList = [
     { name: 'Alex Ovechkin', id: '8471214', pos: 'F' },
@@ -336,7 +332,6 @@ function LineupMachineComponent() {
 
   const data = useMemo(() => rows, [rows]);
 
-
   return (
     <Container maxWidth="xl">
       <h1>hi</h1>
@@ -359,7 +354,6 @@ function LineupMachineComponent() {
       <Styles>
         <ScheduleGridComponent columns={headers} data={data} />
       </Styles>
-
     </Container>
   );
 }
