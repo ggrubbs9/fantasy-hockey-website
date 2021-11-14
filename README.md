@@ -4,6 +4,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+To Start App: 
+
+`npm run start`
+
+To Build App: 
+
+`npm run build`
+
+To Deploy App: 
+
+`firebase deploy --only hosting`
+
 In the project directory, you can run:
 
 ### `yarn start`

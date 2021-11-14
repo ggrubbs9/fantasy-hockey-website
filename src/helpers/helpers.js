@@ -39,7 +39,6 @@ export const searchPlayerID = async (player) => {
       const roster = team.roster.roster;
       roster.forEach((rosterPlayer) => {
         if (rosterPlayer.person.fullName === player) {
-          console.log(rosterPlayer);
           return rosterPlayer;
         }
       });

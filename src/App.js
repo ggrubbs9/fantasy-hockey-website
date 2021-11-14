@@ -10,10 +10,15 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
+
 import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
 
 import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
+
+import SignInDialog from './components/signInDialog';
+// import firebase from "firebase";
+
 
 const useStyles = makeStyles({
   stickToBottom: {
@@ -52,6 +57,7 @@ function App(props) {
     return <h2>Users</h2>;
   }
 
+
   useEffect(() => {
     if (!isLoading) {
       console.log(data);
@@ -60,6 +66,15 @@ function App(props) {
       props.setNHLSchedule();
     }
   }, [data]);
+
+  const handleClick = (e) => {
+    console.log(e);
+  };
+
+  const dialogCallback = (childData) => {
+    console.log(childData);
+  };
+
 
   return (
     <Router>
@@ -126,6 +141,10 @@ function App(props) {
             to="/team-setup"
             label="Team Setup"
             icon={<CachedIcon />}
+          />
+          <SignInDialog
+            parentCallback={dialogCallback}
+            handleClickOpen={handleClick}
           />
         </BottomNavigation>
       </div>
