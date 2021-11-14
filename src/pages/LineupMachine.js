@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Container } from '@material-ui/core';
@@ -8,6 +7,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { setCurrentWeek } from '../store/AllData/allData.actions';
+import { useEffect, useMemo } from 'react';
+import styled from 'styled-components';
+import ScheduleGridComponent from '../components/lineupMachineTable.js';
 
 const mapStateToProps = (state) => {
   return {
@@ -21,33 +23,8 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-function LineupMachineComponent(props) {
-  const [week, setWeek] = useState('');
-
-  const handleChange = (event) => {
-    setWeek(event.target.value);
-    props.setCurrentWeek(event.target.value);
-  };
-
-  const getWeeks = () => {
-    let content = [];
-    for (let i = 1; i < 25; i++) {
-      content.push(
-        <MenuItem key={i} value={i}>
-          Week {i}
-        </MenuItem>
-      );
-    }
-    return content;
-  };
-
-=======
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-import { Container } from '@material-ui/core';
-import { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import ScheduleGridComponent from '../components/lineupMachineTable';
 
 const Styles = styled.div`
   padding: 1rem;
@@ -74,10 +51,31 @@ const Styles = styled.div`
   }
 `;
 
-function LineupMachineComponent() {
-  const [currentWeek] = useState(3);
+function LineupMachineComponent(props) {
+  const [currentWeek, setCurrentWeek] = useState(3);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+
+  const handleChange = (event) => {
+    console.log(event);
+
+    //sets week in page
+    setCurrentWeek(event.target.value);
+    //sets week in store
+    props.setCurrentWeek(event.target.value);
+  };
+
+  const getWeeks = () => {
+    let content = [];
+    for (let i = 1; i < 25; i++) {
+      content.push(
+        <MenuItem key={i} value={i}>
+          Week {i}
+        </MenuItem>
+      );
+    }
+    return content;
+  };
 
   const playerList = [
     { name: 'Alex Ovechkin', id: '8471214', pos: 'F' },
@@ -289,15 +287,16 @@ function LineupMachineComponent() {
     };
     createDaylist();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentWeek]);
 
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
-    daylist.map((week, i) => {
+    setColumns([]);
+    daylist.map((currentWeek, i) => {
       setColumns((columns) => [
         ...columns,
         {
-          Header: week.toLocaleDateString('en-US'),
+          Header: currentWeek.toLocaleDateString('en-US'),
           accessor: `day${i + 1}`,
         },
       ]);
@@ -319,9 +318,7 @@ function LineupMachineComponent() {
       //for each player
       let object = {};
       columns.map((cl) => {
-        console.log(player, cl);
         let check = checkIfPlaying(player, cl);
-        console.log(check);
         object = { ...object, [cl.accessor]: check };
       });
       array.push(object);
@@ -338,7 +335,6 @@ function LineupMachineComponent() {
 
   const data = useMemo(() => rows, [rows]);
 
-
   return (
     <Container maxWidth="xl">
       <h1>hi</h1>
@@ -349,7 +345,7 @@ function LineupMachineComponent() {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={week}
+            value={currentWeek}
             label="Week"
             onChange={handleChange}
           >
@@ -361,7 +357,6 @@ function LineupMachineComponent() {
       <Styles>
         <ScheduleGridComponent columns={headers} data={data} />
       </Styles>
-
     </Container>
   );
 }

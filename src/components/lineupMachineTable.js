@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-import React from 'react';
-import { useTable } from 'react-table';
-
-function LineupMachineTable({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
-=======
+import { useEffect } from 'react';
 import { useTable } from 'react-table';
 import './scheduleGrid.scss';
 
@@ -30,17 +24,17 @@ function ScheduleGridComponent({ columns, data }) {
   //   { name: 'Rasmus Ristolainen', id: '8477499' },
   // ]);
 
->>>>>>> 16f4d943e4a92fe88ec7d3e3467acead6297a499
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
       data,
     });
 
-<<<<<<< HEAD
+  useEffect(() => {
+    // console.log(columns, data);
+  });
+
   // Render the UI for your table
-=======
->>>>>>> 16f4d943e4a92fe88ec7d3e3467acead6297a499
   return (
     <table {...getTableProps()}>
       <thead>
@@ -68,8 +62,4 @@ function ScheduleGridComponent({ columns, data }) {
   );
 }
 
-<<<<<<< HEAD
-export default LineupMachineTable;
-=======
 export default ScheduleGridComponent;
->>>>>>> 16f4d943e4a92fe88ec7d3e3467acead6297a499

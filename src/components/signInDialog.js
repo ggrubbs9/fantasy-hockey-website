@@ -72,11 +72,11 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        // const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log(user);
+        // console.log(user);
 
         getDB(user.email);
 
@@ -84,8 +84,8 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
 
         // TODO: On sign in check database to see if the person exists. If not, direct them to fill out a roster (optional) and other details
         // If person exists, pull database data to state
-        console.log(token);
-        console.log(result);
+        // console.log(token);
+        // console.log(result);
         // ...
       })
       .catch((error) => {
