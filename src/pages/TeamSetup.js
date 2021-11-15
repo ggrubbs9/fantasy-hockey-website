@@ -15,23 +15,26 @@ import FormDialog from '../components/formDialog';
 
 function TeamSetupComponent(props) {
   const count = [
-    { name: 'Alex Ovechkin', id: '8471214' },
-    { name: 'Mika Zibanejad', id: '8476459' },
-    { name: 'Jonathan Huberdeau', id: '8476456' },
-    { name: 'Jake Guentzel', id: '8477404' },
-    { name: 'Ryan Nugent-Hopkins', id: '8476454' },
-    { name: 'J.T. Miller', id: '8476468' },
-    { name: 'Filip Forsberg', id: '8476887' },
-    { name: 'Brady Tkachuk', id: '8480801' },
-    { name: 'Max Domi', id: '8477503' },
-    { name: 'Chris Kreider', id: '8475184' },
+    { name: 'Auston Matthews', pos: 'F', id: '8479318' },
+    { name: 'Artemi Panarin', pos: 'F', id: '8478550' },
+    { name: 'Aleksander Barkov', pos: 'F', id: '8477493' },
+    { name: 'Jake Guentzel', pos: 'F', id: '8477404' },
+    { name: 'Anze Kopitar', pos: 'F', id: '8471685' },
+    { name: `Ryan O'Reilly`, pos: 'F', id: '8475158' },
+    { name: 'Johnny Gaudreau', pos: 'F', id: '8476346' },
+    { name: 'Teuvo Teravainen', pos: 'F', id: '8476882' },
+    { name: 'Ryan Strome', pos: 'F', id: '8476458' },
+    { name: 'Ryan Nugent-Hopkins', pos: 'F', id: '8476454' },
+    { name: 'Jordan Eberle', pos: 'F', id: '8474586' },
+    { name: 'Conor Garland', pos: 'F', id: '8478856' },
 
-    { name: 'Brent Burns', id: '8470613' },
-    { name: 'Ryan Pulock', id: '8477506' },
-    { name: 'Mark Giordano', id: '8470966' },
-    { name: 'Quinn Hughes', id: '8480800' },
-    { name: 'Adam Fox', id: '8479323' },
-    { name: 'Rasmus Ristolainen', id: '8477499' },
+    { name: 'Tyson Barrie', pos: 'D', id: '8475197' },
+    { name: 'Kris Letang', pos: 'D', id: '8471724' },
+    { name: 'Torey Krug', pos: 'D', id: '8476792' },
+    { name: 'Adam Fox', pos: 'D', id: '8479323' },
+    { name: 'Thomas Chabot', pos: 'D', id: '8478469' },
+    { name: 'Erik Karlsson', pos: 'D', id: '8474578' },
+    { name: 'Adam Boqvist', pos: 'D', id: '8480871' },
   ];
 
   const [setPlayerID] = useState([]);

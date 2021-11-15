@@ -38,24 +38,27 @@ const useStyles = makeStyles({
 function PlayerPickupComponent() {
   const classes = useStyles();
   const [players] = useState([
-    { name: 'Alex Ovechkin', id: '8471214' },
-    { name: 'Mika Zibanejad', id: '8476459' },
-    { name: 'Jonathan Huberdeau', id: '8476456' },
+    { name: 'Auston Matthews', id: '8479318' },
+    { name: 'Artemi Panarin', id: '8478550' },
+    { name: 'Aleksander Barkov', id: '8477493' },
     { name: 'Jake Guentzel', id: '8477404' },
+    { name: 'Anze Kopitar', id: '8471685' },
+    { name: `Ryan O'Reilly`, id: '8475158' },
+    { name: 'Johnny Gaudreau', id: '8476346' },
+    { name: 'Teuvo Teravainen', id: '8476882' },
+    { name: 'Ryan Strome', id: '8476458' },
     { name: 'Ryan Nugent-Hopkins', id: '8476454' },
-    { name: 'J.T. Miller', id: '8476468' },
-    { name: 'Filip Forsberg', id: '8476887' },
-    { name: 'Brady Tkachuk', id: '8480801' },
-    { name: 'Max Domi', id: '8477503' },
-    { name: 'Chris Kreider', id: '8475184' },
+    { name: 'Jordan Eberle', id: '8474586' },
+    { name: 'Conor Garland', id: '8478856' },
   ]);
   const [defensePlayers] = useState([
-    { name: 'Brent Burns', id: '8470613' },
-    { name: 'Ryan Pulock', id: '8477506' },
-    { name: 'Mark Giordano', id: '8470966' },
-    { name: 'Quinn Hughes', id: '8480800' },
+    { name: 'Tyson Barrie', id: '8475197' },
+    { name: 'Kris Letang', id: '8471724' },
+    { name: 'Torey Krug', id: '8476792' },
     { name: 'Adam Fox', id: '8479323' },
-    { name: 'Rasmus Ristolainen', id: '8477499' },
+    { name: 'Thomas Chabot', id: '8478469' },
+    { name: 'Erik Karlsson', id: '8474578' },
+    { name: 'Adam Boqvist', id: '8480871' },
   ]);
   const [rows, setRows] = useState([]);
   const [defenseRows, setDefenseRows] = useState([]);
@@ -183,7 +186,7 @@ function PlayerPickupComponent() {
 
     const getData = async (x) => {
       const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
+        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20212022`
       );
       return res;
     };
@@ -216,7 +219,7 @@ function PlayerPickupComponent() {
 
     const getData = async (x) => {
       const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
+        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20212022`
       );
       return res;
     };
