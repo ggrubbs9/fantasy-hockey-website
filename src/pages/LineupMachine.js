@@ -325,7 +325,7 @@ function LineupMachineComponent(props) {
     });
     setRows(array);
   };
-
+console.log('aasdfasdf')
   useEffect(() => {
     if (columns.length) {
       createRowData();
