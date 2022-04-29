@@ -10,22 +10,22 @@ import { setCurrentWeek } from '../store/AllData/allData.actions';
 import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import ScheduleGridComponent from '../components/lineupMachineTable.js';
+import axios from 'axios';
+import moment from 'moment';
+import userEvent from '@testing-library/user-event';
 
 const mapStateToProps = (state) => {
   return {
     state: state,
   };
 };
-
 const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentWeek: (x) => dispatch(setCurrentWeek(x)),
   };
 };
-
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-
 const Styles = styled.div`
   padding: 1rem;
   table {
@@ -50,21 +50,17 @@ const Styles = styled.div`
     }
   }
 `;
-
 function LineupMachineComponent(props) {
   const [currentWeek, setCurrentWeek] = useState(3);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
-
   const handleChange = (event) => {
     console.log(event);
-
     //sets week in page
     setCurrentWeek(event.target.value);
     //sets week in store
     props.setCurrentWeek(event.target.value);
   };
-
   const getWeeks = () => {
     let content = [];
     for (let i = 1; i < 25; i++) {
@@ -77,46 +73,7 @@ function LineupMachineComponent(props) {
     return content;
   };
 
-  const playerList = [
-    { name: 'Alex Ovechkin', id: '8471214', pos: 'F' },
-    { name: 'Mika Zibanejad', id: '8476459', pos: 'F' },
-    { name: 'Jonathan Huberdeau', id: '8476456', pos: 'F' },
-    { name: 'Jake Guentzel', id: '8477404', pos: 'F' },
-    { name: 'Ryan Nugent-Hopkins', id: '8476454', pos: 'F' },
-    { name: 'J.T. Miller', id: '8476468', pos: 'F' },
-    { name: 'Filip Forsberg', id: '8476887', pos: 'F' },
-    { name: 'Brady Tkachuk', id: '8480801', pos: 'F' },
-    { name: 'Max Domi', id: '8477503', pos: 'F' },
-    { name: 'Chris Kreider', id: '8475184', pos: 'F' },
-
-    { name: 'Brent Burns', id: '8470613', pos: 'D' },
-    { name: 'Ryan Pulock', id: '8477506', pos: 'D' },
-    { name: 'Mark Giordano', id: '8470966', pos: 'D' },
-    { name: 'Quinn Hughes', id: '8480800', pos: 'D' },
-    { name: 'Adam Fox', id: '8479323', pos: 'D' },
-    { name: 'Rasmus Ristolainen', id: '8477499', pos: 'D' },
-  ];
-
-  // const [players] = useState([
-  //   { name: 'Alex Ovechkin', id: '8471214' },
-  //   { name: 'Mika Zibanejad', id: '8476459' },
-  //   { name: 'Jonathan Huberdeau', id: '8476456' },
-  //   { name: 'Jake Guentzel', id: '8477404' },
-  //   { name: 'Ryan Nugent-Hopkins', id: '8476454' },
-  //   { name: 'J.T. Miller', id: '8476468' },
-  //   { name: 'Filip Forsberg', id: '8476887' },
-  //   { name: 'Brady Tkachuk', id: '8480801' },
-  //   { name: 'Max Domi', id: '8477503' },
-  //   { name: 'Chris Kreider', id: '8475184' },
-  // ]);
-  // const [defensePlayers] = useState([
-  //   { name: 'Brent Burns', id: '8470613' },
-  //   { name: 'Ryan Pulock', id: '8477506' },
-  //   { name: 'Mark Giordano', id: '8470966' },
-  //   { name: 'Quinn Hughes', id: '8480800' },
-  //   { name: 'Adam Fox', id: '8479323' },
-  //   { name: 'Rasmus Ristolainen', id: '8477499' },
-  // ]);
+  // TODO: Generate week list with moment or something. Given a starting date, and number of weeks
   const fantasyWeekList = [
     {
       id: 1,
@@ -276,6 +233,75 @@ function LineupMachineComponent(props) {
   };
 
   useEffect(() => {
+
+    const addPlayerSchedule = async (data) => {
+      const promises = [];
+      const startDate = moment(fantasyWeekList[currentWeek-1].startDate).format('YYYY-MM-DD')
+      const endDate = moment(fantasyWeekList[currentWeek-1].endDate).format('YYYY-MM-DD')
+
+      const getData = async (x) => {
+        const res = axios.get(
+          `https://statsapi.web.nhl.com/api/v1/schedule?teamId=${x.teamID}&startDate=${startDate}&endDate=${endDate}`
+        );
+        return res;
+      };
+
+      data.forEach((d) => {
+        promises.push(getData(d));
+      });
+      await Promise.all(promises).then((results) => {
+        const updatedPlayerData = [...playerData];
+        results.forEach((result,index) => {
+          updatedPlayerData[index].gamesThisWeek = result.data.dates;
+        });
+        console.log(updatedPlayerData)
+      });
+    };
+
+    const addPlayerTeamAbbr = async (data) => {
+      const promises = [];
+      const getData = async (x) => {
+        const res = axios.get(
+          `https://statsapi.web.nhl.com/api/v1/teams/${x}`
+        );
+        return res;
+      };
+
+      data.forEach((d) => {
+        promises.push(getData(d.teamID));
+      });
+      await Promise.all(promises).then((results) => {
+        const updatedPlayerData = [...playerData];
+        results.forEach((result,index) => {
+          updatedPlayerData[index].teamAbbr = result.data.teams[0].abbreviation;
+        });
+        addPlayerSchedule(updatedPlayerData)
+      });
+    };
+
+    const addPlayerTeamID = async () => {
+      const promises = [];
+      const getData = async (x) => {
+        const res = axios.get(
+          `https://statsapi.web.nhl.com/api/v1/people/${x.id}`
+        );
+        return res;
+      };
+      playerData.forEach((player) => {
+        promises.push(getData(player));
+      });
+      await Promise.all(promises).then((results) => {
+        const updatedPlayerData = [...playerData];
+        results.forEach((result,index) => {
+          updatedPlayerData[index].teamID = result.data.people[0].currentTeam.id;
+        });
+        addPlayerTeamAbbr(updatedPlayerData)
+      })
+    };
+    addPlayerTeamID();
+  }, [currentWeek]);
+
+  useEffect(() => {
     const createDaylist = () => {
       let weekObject = fantasyWeekList.find((x) => x.id === currentWeek);
       var daylist = getDaysArray(
@@ -288,7 +314,6 @@ function LineupMachineComponent(props) {
     createDaylist();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWeek]);
-
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
     setColumns([]);
@@ -304,17 +329,22 @@ function LineupMachineComponent(props) {
   };
 
   const checkIfPlaying = (player, column) => {
-    // get player team
-    // check if team plays on given date on NHL schedule
-    // return away/home as @ or '' and show opponent
-    let x = '@CHI';
-    return x;
+    let x;
+    let teamID;
+    let dateFormatted;
+    // console.log(player,column)
+    /**
+     * * get player team
+     * * check if team plays on given date on NHL schedule
+     * * return away/home as @ or '' and show opponent
+     */
+    return '@CHI';
   };
 
   const createRowData = () => {
     //for each column
     let array = [];
-    playerList.map((player) => {
+    playerData.map((player) => {
       //for each player
       let object = {};
       columns.map((cl) => {
@@ -325,20 +355,152 @@ function LineupMachineComponent(props) {
     });
     setRows(array);
   };
-console.log('aasdfasdf')
+
+  const [playerData, setPlayerData] = useState([
+    {
+      name: 'Alex Ovechkin',
+      id: '8471214',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Mika Zibanejad',
+      id: '8476459',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Jonathan Huberdeau',
+      id: '8476456',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Jake Guentzel',
+      id: '8477404',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Ryan Nugent-Hopkins',
+      id: '8476454',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'J.T. Miller',
+      id: '8476468',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Filip Forsberg',
+      id: '8476887',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Brady Tkachuk',
+      id: '8480801',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Max Domi',
+      id: '8477503',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Chris Kreider',
+      id: '8475184',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Brent Burns',
+      id: '8470613',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+    {
+      name: 'Ryan Pulock',
+      id: '8477506',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+    {
+      name: 'Mark Giordano',
+      id: '8470966',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+    {
+      name: 'Quinn Hughes',
+      id: '8480800',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+    {
+      name: 'Adam Fox',
+      id: '8479323',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+    {
+      name: 'Rasmus Ristolainen',
+      id: '8477499',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+  ]);
+
+  useEffect(() => {
+    console.log(playerData);
+  }, [playerData]);
+
   useEffect(() => {
     if (columns.length) {
       createRowData();
     }
   }, [columns]);
   const headers = useMemo(() => columns, [columns]);
-
   const data = useMemo(() => rows, [rows]);
-
   return (
     <Container maxWidth="xl">
       <h1>hi</h1>
-
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Week</InputLabel>
@@ -353,14 +515,12 @@ console.log('aasdfasdf')
           </Select>
         </FormControl>
       </Box>
-
       <Styles>
         <ScheduleGridComponent columns={headers} data={data} />
       </Styles>
     </Container>
   );
 }
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
