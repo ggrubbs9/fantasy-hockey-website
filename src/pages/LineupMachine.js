@@ -71,8 +71,43 @@ function LineupMachineComponent(props) {
     return content;
   };
 
+  const teams = [
+    { name: 'Anaheim Ducks', abbr: 'ANA' },
+    { name: 'Arizona Coyotes', abbr: 'ARI' },
+    { name: 'Boston Bruins', abbr: 'BOS' },
+    { name: 'Buffalo Sabres', abbr: 'BUF' },
+    { name: 'Calgary Flames', abbr: 'CGY' },
+    { name: 'Carolina Hurricanes', abbr: 'CAR' },
+    { name: 'Chicago Blackhawks', abbr: 'CHI' },
+    { name: 'Colorado Avalanche', abbr: 'COL' },
+    { name: 'Columbus Blue Jackets', abbr: 'CBJ' },
+    { name: 'Dallas Stars', abbr: 'DAL' },
+    { name: 'Detroit Red Wings', abbr: 'DET' },
+    { name: 'Edmonton Oilers', abbr: 'EDM' },
+    { name: 'Florida Panthers', abbr: 'FLA' },
+    { name: 'Los Angeles Kings', abbr: 'LAK' },
+    { name: 'Minnesota Wild', abbr: 'MIN' },
+    { name: 'Montréal Canadiens', abbr: 'MTL' },
+    { name: 'Nashville Predators', abbr: 'NSH' },
+    { name: 'New Jersey Devils', abbr: 'NJD' },
+    { name: 'New York Islanders', abbr: 'NYI' },
+    { name: 'New York Rangers', abbr: 'NYI' },
+    { name: 'Ottawa Senators', abbr: 'OTT' },
+    { name: 'Philadelphia Flyers', abbr: 'PHI' },
+    { name: 'Pittsburgh Penguins', abbr: 'PIT' },
+    { name: 'San Jose Sharks', abbr: 'SJS' },
+    { name: 'Seattle Kraken', abbr: 'SEA' },
+    { name: 'St. Louis Blues', abbr: 'STL' },
+    { name: 'Tampa Bay Lightning', abbr: 'TBL' },
+    { name: 'Toronto Maple Leafs', abbr: 'TOR' },
+    { name: 'Vancouver Canucks', abbr: 'VAN' },
+    { name: 'Vegas Golden Knights', abbr: 'VGK' },
+    { name: 'Washington Capitals', abbr: 'WSH' },
+    { name: 'Winnipeg Jets', abbr: 'WPG' },
+  ];
+
   // TODO: Generate week list with moment or something. Given a starting date, and number of weeks
-  const fantasyWeekList = [
+  const [fantasyWeekList, setFantasyWeekList] = useState([
     {
       id: 1,
       name: 'Week 1',
@@ -217,7 +252,7 @@ function LineupMachineComponent(props) {
       startDate: '4/17/22',
       endDate: '4/18/22',
     },
-  ];
+  ]);
 
   const getDaysArray = (start, end) => {
     for (
@@ -229,6 +264,50 @@ function LineupMachineComponent(props) {
     }
     return arr;
   };
+
+  const generateFantasySchedule = (start, end, exceptions) => {
+    const weeks = moment(end).diff(moment(start), 'week');
+    const schedule = [];
+    let weekStart;
+    let daysBetween = 6;
+    for (let i = 0; i <= weeks; i++) {
+      if (i === 0) {
+        weekStart = start;
+      }
+      if (exceptions.some((week) => week['Week'] === i)) {
+        const exception = exceptions.find((x) => x.Week === i);
+        weekStart = exception.start;
+        daysBetween = moment(exception.end).diff(
+          moment(exception.start),
+          'days'
+        );
+      } else {
+        daysBetween = 6;
+      }
+      let weekEnd = moment(weekStart)
+        .add(daysBetween, 'days')
+        .format('MM/DD/YY');
+      schedule.push({
+        id: i + 1,
+        name: `Week ${i + 1}`,
+        weekStart: weekStart,
+        weekEnd: weekEnd,
+      });
+      weekStart = moment(weekEnd).add(1, 'days').format('MM/DD/YY');
+    }
+    console.log(schedule);
+  };
+
+  useEffect(() => {
+    // create fantasy schedule given two dates
+    const exceptions = [
+      { Week: 10, start: '12/19/21', end: '12/23/21' },
+      { Week: 11, start: '12/27/21', end: '1/1/22' },
+    ];
+    const startDate = '10/17/21';
+    const endDate = '4/23/22';
+    generateFantasySchedule(startDate, endDate, exceptions);
+  }, []);
 
   useEffect(() => {
     const addPlayerSchedule = async (data) => {
@@ -342,9 +421,11 @@ function LineupMachineComponent(props) {
       const homeTeam = gameData.games[0].teams.home.team;
       const awayTeam = gameData.games[0].teams.away.team;
       if (player.teamID === homeTeam.id) {
-        return awayTeam.name;
+        let team = teams.find((team) => team['name'] === awayTeam.name);
+        return team.abbr;
       } else {
-        return `@${homeTeam.name}`;
+        let team = teams.find((team) => team['name'] === homeTeam.name);
+        return `@${team.abbr}`;
       }
     } else {
       return '';
