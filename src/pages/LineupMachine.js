@@ -12,7 +12,6 @@ import styled from 'styled-components';
 import ScheduleGridComponent from '../components/lineupMachineTable.js';
 import axios from 'axios';
 import moment from 'moment';
-import userEvent from '@testing-library/user-event';
 
 const mapStateToProps = (state) => {
   return {
@@ -55,7 +54,6 @@ function LineupMachineComponent(props) {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const handleChange = (event) => {
-    console.log(event);
     //sets week in page
     setCurrentWeek(event.target.value);
     //sets week in store
@@ -233,11 +231,14 @@ function LineupMachineComponent(props) {
   };
 
   useEffect(() => {
-
     const addPlayerSchedule = async (data) => {
       const promises = [];
-      const startDate = moment(fantasyWeekList[currentWeek-1].startDate).format('YYYY-MM-DD')
-      const endDate = moment(fantasyWeekList[currentWeek-1].endDate).format('YYYY-MM-DD')
+      const startDate = moment(
+        fantasyWeekList[currentWeek - 1].startDate
+      ).format('YYYY-MM-DD');
+      const endDate = moment(fantasyWeekList[currentWeek - 1].endDate).format(
+        'YYYY-MM-DD'
+      );
 
       const getData = async (x) => {
         const res = axios.get(
@@ -251,19 +252,17 @@ function LineupMachineComponent(props) {
       });
       await Promise.all(promises).then((results) => {
         const updatedPlayerData = [...playerData];
-        results.forEach((result,index) => {
+        results.forEach((result, index) => {
           updatedPlayerData[index].gamesThisWeek = result.data.dates;
         });
-        console.log(updatedPlayerData)
+        setPlayerData(updatedPlayerData);
       });
     };
 
     const addPlayerTeamAbbr = async (data) => {
       const promises = [];
       const getData = async (x) => {
-        const res = axios.get(
-          `https://statsapi.web.nhl.com/api/v1/teams/${x}`
-        );
+        const res = axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${x}`);
         return res;
       };
 
@@ -272,10 +271,10 @@ function LineupMachineComponent(props) {
       });
       await Promise.all(promises).then((results) => {
         const updatedPlayerData = [...playerData];
-        results.forEach((result,index) => {
+        results.forEach((result, index) => {
           updatedPlayerData[index].teamAbbr = result.data.teams[0].abbreviation;
         });
-        addPlayerSchedule(updatedPlayerData)
+        addPlayerSchedule(updatedPlayerData);
       });
     };
 
@@ -292,11 +291,12 @@ function LineupMachineComponent(props) {
       });
       await Promise.all(promises).then((results) => {
         const updatedPlayerData = [...playerData];
-        results.forEach((result,index) => {
-          updatedPlayerData[index].teamID = result.data.people[0].currentTeam.id;
+        results.forEach((result, index) => {
+          updatedPlayerData[index].teamID =
+            result.data.people[0].currentTeam.id;
         });
-        addPlayerTeamAbbr(updatedPlayerData)
-      })
+        addPlayerTeamAbbr(updatedPlayerData);
+      });
     };
     addPlayerTeamID();
   }, [currentWeek]);
@@ -316,7 +316,12 @@ function LineupMachineComponent(props) {
   }, [currentWeek]);
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
-    setColumns([]);
+    setColumns([
+      {
+        Header: 'Player',
+        accessor: 'name',
+      },
+    ]);
     daylist.map((currentWeek, i) => {
       setColumns((columns) => [
         ...columns,
@@ -329,16 +334,21 @@ function LineupMachineComponent(props) {
   };
 
   const checkIfPlaying = (player, column) => {
-    let x;
-    let teamID;
-    let dateFormatted;
-    // console.log(player,column)
-    /**
-     * * get player team
-     * * check if team plays on given date on NHL schedule
-     * * return away/home as @ or '' and show opponent
-     */
-    return '@CHI';
+    let formattedDate = moment(column.Header).format('YYYY-MM-DD');
+    let gameData = player.gamesThisWeek.find(
+      (game) => game['date'] === formattedDate
+    );
+    if (typeof gameData !== 'undefined') {
+      const homeTeam = gameData.games[0].teams.home.team;
+      const awayTeam = gameData.games[0].teams.away.team;
+      if (player.teamID === homeTeam.id) {
+        return awayTeam.name;
+      } else {
+        return `@${homeTeam.name}`;
+      }
+    } else {
+      return '';
+    }
   };
 
   const createRowData = () => {
@@ -346,10 +356,12 @@ function LineupMachineComponent(props) {
     let array = [];
     playerData.map((player) => {
       //for each player
-      let object = {};
+      let object = { name: player.name };
       columns.map((cl) => {
-        let check = checkIfPlaying(player, cl);
-        object = { ...object, [cl.accessor]: check };
+        if (cl.Header !== 'Player') {
+          let check = checkIfPlaying(player, cl);
+          object = { ...object, [cl.accessor]: check };
+        }
       });
       array.push(object);
     });
@@ -488,14 +500,9 @@ function LineupMachineComponent(props) {
   ]);
 
   useEffect(() => {
-    console.log(playerData);
+    createRowData();
   }, [playerData]);
 
-  useEffect(() => {
-    if (columns.length) {
-      createRowData();
-    }
-  }, [columns]);
   const headers = useMemo(() => columns, [columns]);
   const data = useMemo(() => rows, [rows]);
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
@@ -11,7 +11,7 @@ import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
 
-import { useGetNHLStatsQuery } from './helpers/NHLApi';
+// import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
 
 import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
@@ -42,11 +42,11 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function App(props) {
-  const { data, error, isLoading } = useGetNHLStatsQuery([
-    'schedule',
-    'expand',
-    '20212022',
-  ]);
+  // const { isLoading } = useGetNHLStatsQuery([
+  //   'schedule',
+  //   'expand',
+  //   '20212022',
+  // ]);
   // const { scheduleData, scheduleError, scheduleIsLoading } =
   //   useGetNHLStatsQuery(['schedule', 'expand', '20212022']);
   const [value, setValue] = React.useState(0);
@@ -56,14 +56,14 @@ function App(props) {
     return <h2>Users</h2>;
   }
 
-  useEffect(() => {
-    if (!isLoading) {
-      // console.log(data);
-      // console.log(props);
-      // props.setTeamStats(data);
-      props.setNHLSchedule();
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     // console.log(data);
+  //     // console.log(props);
+  //     // props.setTeamStats(data);
+  //     props.setNHLSchedule();
+  //   }
+  // }, [isLoading,props]);
 
   const handleClick = (e) => {
     // console.log(e);
