@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import BuildIcon from '@material-ui/icons/Build';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
-import PeopleIcon from '@material-ui/icons/People';
-import CachedIcon from '@material-ui/icons/Cached';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { makeStyles } from '@mui/styles';
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
+import BuildIcon from '@mui/icons-material/Build';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import PeopleIcon from '@mui/icons-material/People';
+import CachedIcon from '@mui/icons-material/Cached';
 import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
+// import { useQuery, gql } from '@apollo/client';
 
-import { useGetNHLStatsQuery } from './helpers/NHLApi';
+// import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
 
 import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
@@ -42,11 +43,18 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function App(props) {
-  const { data, error, isLoading } = useGetNHLStatsQuery([
-    'schedule',
-    'expand',
-    '20212022',
-  ]);
+//   const HELLO_WORLD = gql`
+//     {
+//       hello
+//     }
+//   `;
+  // const { loading, error, data } = useQuery(HELLO_WORLD);
+
+  // const { isLoading } = useGetNHLStatsQuery([
+  //   'schedule',
+  //   'expand',
+  //   '20212022',
+  // ]);
   // const { scheduleData, scheduleError, scheduleIsLoading } =
   //   useGetNHLStatsQuery(['schedule', 'expand', '20212022']);
   const [value, setValue] = React.useState(0);
@@ -56,14 +64,14 @@ function App(props) {
     return <h2>Users</h2>;
   }
 
-  useEffect(() => {
-    if (!isLoading) {
-      // console.log(data);
-      // console.log(props);
-      // props.setTeamStats(data);
-      props.setNHLSchedule();
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     // console.log(data);
+  //     // console.log(props);
+  //     // props.setTeamStats(data);
+  //     props.setNHLSchedule();
+  //   }
+  // }, [isLoading,props]);
 
   const handleClick = (e) => {
     // console.log(e);
@@ -76,30 +84,13 @@ function App(props) {
   return (
     <Router>
       <div>
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
-        <Switch>
-          <Route exact path="/">
-            <LineupMachineComponent />
-          </Route>
-          <Route path="/player-stats">
-            <PlayerStatsComponent />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-          <Route path="/player-pickup">
-            <PlayerPickupComponent />
-          </Route>
-          <Route path="/team-setup">
-            <TeamSetupComponent />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<LineupMachineComponent/>}/>
+          <Route path="/player-stats" element={<PlayerStatsComponent/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/player-pickup" element={<PlayerPickupComponent/>}/>
+          <Route path="/team-setup" element={<TeamSetupComponent/>}/>
+        </Routes>
 
         <BottomNavigation
           value={value}
