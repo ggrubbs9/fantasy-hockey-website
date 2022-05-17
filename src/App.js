@@ -10,6 +10,7 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
+import { useQuery, gql } from '@apollo/client';
 
 // import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
@@ -42,6 +43,13 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function App(props) {
+  const HELLO_WORLD = gql`
+    {
+      hello
+    }
+  `;
+  const { loading, error, data } = useQuery(HELLO_WORLD);
+
   // const { isLoading } = useGetNHLStatsQuery([
   //   'schedule',
   //   'expand',
@@ -144,6 +152,8 @@ function App(props) {
             handleClickOpen={handleClick}
           />
         </BottomNavigation>
+        {loading ? <p>Loading...</p> : <p>{data.hello}</p>}
+
       </div>
     </Router>
   );

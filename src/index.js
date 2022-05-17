@@ -8,8 +8,13 @@ import { Provider } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore/lite';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 
-
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
+});
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCQBbv-LFA0Fy2HLP82FAClcQf6JTXSnbM',
@@ -25,12 +30,13 @@ const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars
 const db = getFirestore(app);
 
-
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
