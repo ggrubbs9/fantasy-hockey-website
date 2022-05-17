@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { makeStyles } from '@mui/styles';
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import BuildIcon from '@mui/icons-material/Build';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
@@ -10,7 +10,7 @@ import LineupMachineComponent from './pages/LineupMachine';
 import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
-import { useQuery, gql } from '@apollo/client';
+// import { useQuery, gql } from '@apollo/client';
 
 // import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
@@ -43,12 +43,12 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function App(props) {
-  const HELLO_WORLD = gql`
-    {
-      hello
-    }
-  `;
-  const { loading, error, data } = useQuery(HELLO_WORLD);
+//   const HELLO_WORLD = gql`
+//     {
+//       hello
+//     }
+//   `;
+  // const { loading, error, data } = useQuery(HELLO_WORLD);
 
   // const { isLoading } = useGetNHLStatsQuery([
   //   'schedule',
@@ -84,30 +84,13 @@ function App(props) {
   return (
     <Router>
       <div>
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
-        <Switch>
-          <Route exact path="/">
-            <LineupMachineComponent />
-          </Route>
-          <Route path="/player-stats">
-            <PlayerStatsComponent />
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-          <Route path="/player-pickup">
-            <PlayerPickupComponent />
-          </Route>
-          <Route path="/team-setup">
-            <TeamSetupComponent />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<LineupMachineComponent/>}/>
+          <Route path="/player-stats" element={<PlayerStatsComponent/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/player-pickup" element={<PlayerPickupComponent/>}/>
+          <Route path="/team-setup" element={<TeamSetupComponent/>}/>
+        </Routes>
 
         <BottomNavigation
           value={value}
@@ -152,8 +135,6 @@ function App(props) {
             handleClickOpen={handleClick}
           />
         </BottomNavigation>
-        {loading ? <p>Loading...</p> : <p>{data.hello}</p>}
-
       </div>
     </Router>
   );

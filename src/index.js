@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -10,6 +10,9 @@ import 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore/lite';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client/react';
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
+
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -30,7 +33,7 @@ const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars
 const db = getFirestore(app);
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <Provider store={store}>
@@ -38,7 +41,6 @@ ReactDOM.render(
       </Provider>
     </ApolloProvider>
   </React.StrictMode>,
-  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

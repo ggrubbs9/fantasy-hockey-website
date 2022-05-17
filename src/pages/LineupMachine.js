@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Container } from '@material-ui/core';
+import { Container } from '@mui/material';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -107,7 +107,7 @@ function LineupMachineComponent(props) {
   ];
 
   // TODO: Generate week list with moment or something. Given a starting date, and number of weeks
-  const [fantasyWeekList, setFantasyWeekList] = useState([
+  const [fantasyWeekList] = useState([
     {
       id: 1,
       name: 'Week 1',
