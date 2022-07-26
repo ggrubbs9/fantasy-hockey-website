@@ -10,11 +10,57 @@ import {
   TableHead,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import FormDialog from '../components/formDialog';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {
+  getFirestore,
+  collection,
+  query,
+  getDocs,
+  where,
+} from 'firebase/firestore';
 
 function TeamSetupComponent(props) {
-  const count = [
+  console.log('hit 1');
+  const [forwards, setForwards] = useState([]);
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+
+    console.log('hit', auth);
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      // console.log('user:', user);
+      getDB(user);
+      // ...
+    } else {
+      // console.log('no user');
+      // User is signed out
+      // ...
+    }
+  });
+
+  const getDB = async (user) => {
+    console.log('hit');
+    const db = getFirestore();
+    const q = query(
+      collection(db, 'users'),
+      where('email', '==', `${user.email}`)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, ' => ', doc.data());
+      // const data = doc.data()
+      // console.log(data)
+      // setForwards(data.forwards);
+    });
+  };
+
+  const team = [
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
     { name: 'Jonathan Huberdeau', id: '8476456' },
@@ -34,43 +80,16 @@ function TeamSetupComponent(props) {
     { name: 'Rasmus Ristolainen', id: '8477499' },
   ];
 
-  const [setPlayerID] = useState([]);
-
-  useEffect(() => {
-    const searchPlayerID = async (player) => {
-      const promises = [];
-
-      const getData = () => {
-        const res = axios.get(
-          `https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster`
-        );
-        return res;
-      };
-
-      promises.push(getData());
-
-      await Promise.all(promises).then((results) => {
-        const teams = results[0].data.teams;
-
-        teams.forEach((team) => {
-          const roster = team.roster.roster;
-          roster.forEach((rosterPlayer) => {
-            if (rosterPlayer.person.fullName === player) {
-              setPlayerID(rosterPlayer.person.id);
-            }
-          });
-        });
-      });
-    };
-    searchPlayerID('Patrick Kane');
-  }, [setPlayerID]);
+  // useEffect(() => {
+  //   console.log(forwards);
+  // }, [forwards]);
 
   const handleClick = (e) => {
-    // console.log(e);
+    console.log(e);
   };
 
   const dialogCallback = (childData) => {
-    //console.log(childData);
+    console.log(childData);
   };
 
   return (
@@ -91,7 +110,7 @@ function TeamSetupComponent(props) {
           </TableHead>
 
           <TableBody>
-            {count.map((row, i) => (
+            {(forwards ? forwards : []).map((row, i) => (
               <TableRow key={i}>
                 <TableCell onClick={() => handleClick(row)} align="left">
                   <EditIcon />

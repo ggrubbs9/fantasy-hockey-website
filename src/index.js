@@ -34,13 +34,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ApolloProvider client={client}>
       <Provider store={store}>
         <App />
       </Provider>
-    </ApolloProvider>
-  </React.StrictMode>,
+    </ApolloProvider>,
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
