@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container, Box, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   TableBody,
@@ -10,7 +10,6 @@ import {
   TableHead,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import FormDialog from '../components/formDialog';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   getFirestore,
@@ -21,44 +20,7 @@ import {
 } from 'firebase/firestore';
 
 function TeamSetupComponent(props) {
-  console.log('hit 1');
   const [forwards, setForwards] = useState([]);
-
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-
-    console.log('hit', auth);
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      // console.log('user:', user);
-      getDB(user);
-      // ...
-    } else {
-      // console.log('no user');
-      // User is signed out
-      // ...
-    }
-  });
-
-  const getDB = async (user) => {
-    console.log('hit');
-    const db = getFirestore();
-    const q = query(
-      collection(db, 'users'),
-      where('email', '==', `${user.email}`)
-    );
-
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, ' => ', doc.data());
-      // const data = doc.data()
-      // console.log(data)
-      // setForwards(data.forwards);
-    });
-  };
 
   const team = [
     { name: 'Alex Ovechkin', id: '8471214' },
@@ -80,9 +42,29 @@ function TeamSetupComponent(props) {
     { name: 'Rasmus Ristolainen', id: '8477499' },
   ];
 
-  // useEffect(() => {
-  //   console.log(forwards);
-  // }, [forwards]);
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        getDB(user);
+      }
+    });
+
+    const getDB = async (user) => {
+      const db = getFirestore();
+      const q = query(
+        collection(db, 'users'),
+        where('email', '==', `${user.email}`)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, ' => ', doc.data());
+        const data = doc.data();
+        setForwards(data.players.forwards);
+      });
+    };
+  }, []);
 
   const handleClick = (e) => {
     console.log(e);
@@ -92,12 +74,92 @@ function TeamSetupComponent(props) {
     console.log(childData);
   };
 
+  const PlayerSearch = () => {
+    const ariaLabel = { 'aria-label': 'description' };
+    const [name, setName] = useState('');
+    const [results, setResults] = useState([]);
+
+    const filterResults = (name) => {
+      console.log('start filter with: ', name);
+      if (name === 'Graham') {
+        setResults([{ name: 'yo test' }]);
+      }
+    };
+
+    const handleChange = (event) => {
+      setName(event.target.value);
+    };
+
+    const handleSubmit = () => {
+      filterResults(name);
+    };
+
+    const keyPress = (event) => {
+      if (event.keyCode === 13) {
+        setName('');
+        handleSubmit();
+      }
+    };
+
+    const handleSearchClick = (e) => {
+      console.log(e);
+      setForwards([...forwards,{ name: e.name, id: e.id, position: e.pos }]);
+    };
+
+    return (
+      <div>
+        {' '}
+        <Box
+          sx={{
+            '& > :not(style)': { m: 1 },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField
+            label="Search Here"
+            value={name}
+            onChange={handleChange}
+            inputProps={ariaLabel}
+            onKeyDown={keyPress}
+          />
+        </Box>
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Add</TableCell>
+                <TableCell>Name</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {results.map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell
+                    onClick={() => handleSearchClick(row)}
+                    align="left"
+                  >
+                    <EditIcon />
+                  </TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    );
+  };
+
   return (
     <Container>
-      <FormDialog
+      {/* <FormDialog
         parentCallback={dialogCallback}
         handleClickOpen={handleClick}
-      />
+      /> */}
+      <PlayerSearch />
+      <br />
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
