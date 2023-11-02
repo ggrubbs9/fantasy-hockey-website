@@ -1,10 +1,10 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import rootReducer from './rootReducer';
-import thunk from 'redux-thunk';
+import { configureStore } from '@reduxjs/toolkit';
+import logger from 'redux-logger'
+import NHLDataReducer from './AllData/allData.reducer';
 
-const composedEnhancer = compose(rootReducer, applyMiddleware(thunk));
-
-const store = createStore(composedEnhancer, composeWithDevTools());
+const store = configureStore({
+    reducer: NHLDataReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+});
 
 export default store;

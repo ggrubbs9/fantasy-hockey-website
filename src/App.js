@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { makeStyles } from '@mui/styles';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import BuildIcon from '@mui/icons-material/Build';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -11,6 +10,7 @@ import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
 // import { useQuery, gql } from '@apollo/client';
+import "./App.css"
 
 // import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
@@ -20,20 +20,11 @@ import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
 import SignInDialog from './components/signInDialog';
 // import firebase from "firebase";
 
-const useStyles = makeStyles({
-  stickToBottom: {
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    backgroundColor: 'lightgrey',
-  },
-});
-
 const mapStateToProps = (state) => {
   return {
-    count: state,
-  };
-};
+    test: state
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -42,12 +33,16 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-function App(props) {
-//   const HELLO_WORLD = gql`
-//     {
-//       hello
-//     }
-//   `;
+function App(props, state) {
+
+  useEffect(() => {
+    console.log(props)
+  }, [props])
+  //   const HELLO_WORLD = gql`
+  //     {
+  //       hello
+  //     }
+  //   `;
   // const { loading, error, data } = useQuery(HELLO_WORLD);
 
   // const { isLoading } = useGetNHLStatsQuery([
@@ -58,7 +53,6 @@ function App(props) {
   // const { scheduleData, scheduleError, scheduleIsLoading } =
   //   useGetNHLStatsQuery(['schedule', 'expand', '20212022']);
   const [value, setValue] = React.useState(0);
-  const classes = useStyles();
 
   function Dashboard() {
     return <h2>Users</h2>;
@@ -85,11 +79,11 @@ function App(props) {
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<LineupMachineComponent/>}/>
-          <Route path="/player-stats" element={<PlayerStatsComponent/>}/>
-          <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/player-pickup" element={<PlayerPickupComponent/>}/>
-          <Route path="/team-setup" element={<TeamSetupComponent/>}/>
+          <Route path="/" element={<LineupMachineComponent />} />
+          <Route path="/player-stats" element={<PlayerStatsComponent />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/player-pickup" element={<PlayerPickupComponent />} />
+          <Route path="/team-setup" element={<TeamSetupComponent />} />
         </Routes>
 
         <BottomNavigation
@@ -98,7 +92,7 @@ function App(props) {
             setValue(newValue);
           }}
           showLabels
-          className={classes.stickToBottom}
+          className="bottom-nav"
         >
           <BottomNavigationAction
             component={Link}

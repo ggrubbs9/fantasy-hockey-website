@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { makeStyles } from '@mui/styles';
 import {
   Container,
   FormControl,
@@ -15,28 +14,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: '100%',
-  },
-  marginBottom: {
-    marginBottom: '100px',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  formControl: {
-    minWidth: 180,
-    marginLeft: '24px',
-  },
-});
+import "./pages.scss";
 
 // to get player ID -> GET https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster
 
 function PlayerStatsComponent() {
-  const classes = useStyles();
   const [players] = useState([
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
@@ -250,9 +232,9 @@ function PlayerStatsComponent() {
 
   return (
     <Container>
-      <div className={classes.header}>
+      <div className='header'>
         <h1>player stats</h1>
-        <FormControl className={classes.formControl}>
+        <FormControl className='form-control'>
           <InputLabel id="demo-simple-select-label">Games Selected</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -267,10 +249,10 @@ function PlayerStatsComponent() {
         </FormControl>
       </div>
 
-      <div className={classes.marginBottom}>
+      <div className='margin-bottom'>
         <h2>Offense Players</h2>
         <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
+          <Table className='table' aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -312,7 +294,7 @@ function PlayerStatsComponent() {
         <br />
         <h2>Defense Players</h2>
         <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
+          <Table className='table' aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>

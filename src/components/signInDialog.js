@@ -42,19 +42,27 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
     setValue(newValue);
   };
 
-  const getDB = async (email) => {
+  const getDB = async (user) => {
     const db = getFirestore();
-    const q = query(collection(db, 'users'), where('email', '==', `${email}`));
+    const q = query(collection(db, 'users'), where('email', '==', `${user.email}`));
 
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
+      console.log(user)
       // email does not exist
       const usersRef = collection(db, 'users');
       await setDoc(doc(usersRef, `${uuidv4()}`), {
         id: `${uuidv4()}`,
-        players: [{ id: 1, name: 'test', position: 'F' }],
-        email: `${email}`,
+        email: user.email,
+        profileImg: user.photoURL,
+        players: {
+          forwards:[],
+          defense:[],
+          goalies:[],
+          shorthanded:[],
+          powerplay:[]
+        },
       });
     } else {
       // email does exist
@@ -76,9 +84,9 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
         // const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        // console.log(user);
+        console.log(user);
 
-        getDB(user.email);
+        getDB(user);
 
         //TODO: store token in local storage? Not sure about this one.
 
