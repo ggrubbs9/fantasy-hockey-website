@@ -50,7 +50,7 @@ const Styles = styled.div`
   }
 `;
 function LineupMachineComponent(props) {
-  const [currentWeek, setCurrentWeek] = useState(3);
+  const [currentWeek, setCurrentWeek] = useState(1);
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const handleChange = (event) => {
@@ -111,146 +111,146 @@ function LineupMachineComponent(props) {
     {
       id: 1,
       name: 'Week 1',
-      startDate: '10/17/21',
-      endDate: '10/23/21',
+      startDate: '10/15/23',
+      endDate: '10/21/23',
     },
     {
       id: 2,
       name: 'Week 2',
-      startDate: '10/24/21',
-      endDate: '10/30/21',
+      startDate: '10/22/23',
+      endDate: '10/28/23',
     },
     {
       id: 3,
       name: 'Week 3',
-      startDate: '10/31/21',
-      endDate: '11/6/21',
+      startDate: '10/29/23',
+      endDate: '11/4/23',
     },
     {
       id: 4,
       name: 'Week 4',
-      startDate: '11/7/21',
-      endDate: '11/13/21',
+      startDate: '11/5/23',
+      endDate: '11/11/23',
     },
     {
       id: 5,
       name: 'Week 5',
-      startDate: '11/14/21',
-      endDate: '11/20/21',
+      startDate: '11/12/23',
+      endDate: '11/18/23',
     },
     {
       id: 6,
       name: 'Week 6',
-      startDate: '11/21/21',
-      endDate: '11/27/21',
+      startDate: '11/19/23',
+      endDate: '11/25/23',
     },
     {
       id: 7,
       name: 'Week 7',
-      startDate: '11/28/21',
-      endDate: '12/4/21',
+      startDate: '11/26/23',
+      endDate: '12/2/23',
     },
     {
       id: 8,
       name: 'Week 8',
-      startDate: '12/5/21',
-      endDate: '12/11/21',
+      startDate: '12/3/23',
+      endDate: '12/9/23',
     },
     {
       id: 9,
       name: 'Week 9',
-      startDate: '12/12/21',
-      endDate: '12/18/21',
+      startDate: '12/10/23',
+      endDate: '12/16/23',
     },
     {
       id: 10,
       name: 'Week 10',
-      startDate: '12/19/12',
-      endDate: '12/23/21',
+      startDate: '12/17/23',
+      endDate: '12/23/23',
     },
     {
       id: 11,
       name: 'Week 11',
-      startDate: '12/27/21',
-      endDate: '1/1/22',
+      startDate: '12/27/23',
+      endDate: '12/30/23',
     },
     {
       id: 12,
       name: 'Week 12',
-      startDate: '1/2/22',
-      endDate: '1/8/22',
+      startDate: '12/31/23',
+      endDate: '1/6/24',
     },
     {
       id: 13,
       name: 'Week 13',
-      startDate: '1/9/22',
-      endDate: '1/15/22',
+      startDate: '1/7/24',
+      endDate: '1/13/24',
     },
     {
       id: 14,
       name: 'Week 14',
-      startDate: '1/16/22',
-      endDate: '1/22/22',
+      startDate: '1/14/24',
+      endDate: '1/20/24',
     },
     {
       id: 15,
       name: 'Week 15',
-      startDate: '1/23/22',
-      endDate: '1/29/22',
+      startDate: '1/21/24',
+      endDate: '1/27/24',
     },
     {
       id: 16,
       name: 'Week 16',
-      startDate: '1/30/22',
-      endDate: '2/26/22',
+      startDate: '1/28/24',
+      endDate: '2/10/24',
     },
     {
       id: 17,
       name: 'Week 17',
-      startDate: '2/27/22',
-      endDate: '3/5/22',
+      startDate: '2/11/24',
+      endDate: '2/17/24',
     },
     {
       id: 18,
       name: 'Week 18',
-      startDate: '3/6/22',
-      endDate: '3/12/22',
+      startDate: '2/18/24',
+      endDate: '2/24/24',
     },
     {
       id: 19,
       name: 'Week 19',
-      startDate: '3/13/22',
-      endDate: '3/19/22',
+      startDate: '2/25/24',
+      endDate: '3/2/24',
     },
     {
       id: 20,
       name: 'Week 20',
-      startDate: '3/20/22',
-      endDate: '3/26/22',
+      startDate: '3/3/24',
+      endDate: '3/9/24',
     },
     {
       id: 21,
       name: 'Week 21',
-      startDate: '3/27/22',
-      endDate: '4/2/22',
+      startDate: '3/10/24',
+      endDate: '3/16/24',
     },
     {
       id: 22,
-      name: 'Week 22',
-      startDate: '4/3/22',
-      endDate: '4/9/22',
+      name: 'Week 24',
+      startDate: '3/17/24',
+      endDate: '3/23/24',
     },
     {
       id: 23,
-      name: 'Week 23',
-      startDate: '4/10/22',
-      endDate: '4/16/22',
+      name: 'Week 24',
+      startDate: '3/24/24',
+      endDate: '3/30/24',
     },
     {
       id: 24,
       name: 'Week 24',
-      startDate: '4/17/22',
-      endDate: '4/18/22',
+      startDate: '3/31/24',
+      endDate: '4/6/24',
     },
   ]);
 
@@ -301,11 +301,11 @@ function LineupMachineComponent(props) {
   useEffect(() => {
     // create fantasy schedule given two dates
     const exceptions = [
-      { Week: 10, start: '12/19/21', end: '12/23/21' },
-      { Week: 11, start: '12/27/21', end: '1/1/22' },
+      // { Week: 10, start: '12/19/21', end: '12/23/21' },
+      // { Week: 11, start: '12/27/21', end: '1/1/22' },
     ];
-    const startDate = '10/17/21';
-    const endDate = '4/23/22';
+    const startDate = '10/15/23';
+    const endDate = '4/6/24';
     generateFantasySchedule(startDate, endDate, exceptions);
   }, []);
 
@@ -393,6 +393,7 @@ function LineupMachineComponent(props) {
     createDaylist();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWeek]);
+  
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
     setColumns([
@@ -451,32 +452,88 @@ function LineupMachineComponent(props) {
 
   const [playerData, setPlayerData] = useState([
     {
-      name: 'Alex Ovechkin',
-      id: '8471214',
+      name: 'David Pastrnak',
+      id: '8477956',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'F',
     },
     {
-      name: 'Mika Zibanejad',
-      id: '8476459',
+      name: 'Brayden Point',
+      id: '8478010',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'F',
     },
     {
-      name: 'Jonathan Huberdeau',
-      id: '8476456',
+      name: 'Sidney Crosby',
+      id: '8471675',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'F',
     },
     {
-      name: 'Jake Guentzel',
-      id: '8477404',
+      name: 'Carter Verhaeghe',
+      id: '8477409',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Sam Reinhart',
+      id: '8477933',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Adrian Kempe',
+      id: '8477960',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Bo Horvat',
+      id: '8477500',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Travis Konecny',
+      id: '8478439',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Owen Tippett',
+      id: '8480015',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Brock Nelson',
+      id: '8475754',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'F',
+    },
+    {
+      name: 'Chandler Stephenson',
+      id: '8476905',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
@@ -491,72 +548,32 @@ function LineupMachineComponent(props) {
       pos: 'F',
     },
     {
-      name: 'J.T. Miller',
-      id: '8476468',
+      name: 'Barrett Hayton',
+      id: '8480849',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'F',
     },
     {
-      name: 'Filip Forsberg',
-      id: '8476887',
-      teamID: '',
-      teamAbbr: '',
-      gamesThisWeek: [],
-      pos: 'F',
-    },
-    {
-      name: 'Brady Tkachuk',
-      id: '8480801',
-      teamID: '',
-      teamAbbr: '',
-      gamesThisWeek: [],
-      pos: 'F',
-    },
-    {
-      name: 'Max Domi',
-      id: '8477503',
-      teamID: '',
-      teamAbbr: '',
-      gamesThisWeek: [],
-      pos: 'F',
-    },
-    {
-      name: 'Chris Kreider',
-      id: '8475184',
-      teamID: '',
-      teamAbbr: '',
-      gamesThisWeek: [],
-      pos: 'F',
-    },
-    {
-      name: 'Brent Burns',
-      id: '8470613',
+      name: 'Charlie McAvoy',
+      id: '8479325',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'D',
     },
     {
-      name: 'Ryan Pulock',
-      id: '8477506',
+      name: 'Kris Letang',
+      id: '8471724',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'D',
     },
     {
-      name: 'Mark Giordano',
-      id: '8470966',
-      teamID: '',
-      teamAbbr: '',
-      gamesThisWeek: [],
-      pos: 'D',
-    },
-    {
-      name: 'Quinn Hughes',
-      id: '8480800',
+      name: 'Zach Werenski',
+      id: '8478460',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
@@ -571,13 +588,29 @@ function LineupMachineComponent(props) {
       pos: 'D',
     },
     {
-      name: 'Rasmus Ristolainen',
-      id: '8477499',
+      name: 'Tyson Barrie',
+      id: '8475197',
       teamID: '',
       teamAbbr: '',
       gamesThisWeek: [],
       pos: 'D',
     },
+    {
+      name: 'Juuso Valimaki',
+      id: '8479976',
+      teamID: '',
+      teamAbbr: '',
+      gamesThisWeek: [],
+      pos: 'D',
+    },
+    // {
+    //   name: 'Brandt Clarke',
+    //   id: '8477499',
+    //   teamID: '',
+    //   teamAbbr: '',
+    //   gamesThisWeek: [],
+    //   pos: 'D',
+    // },
   ]);
 
   useEffect(() => {
@@ -587,7 +620,7 @@ function LineupMachineComponent(props) {
   const headers = useMemo(() => columns, [columns]);
   const data = useMemo(() => rows, [rows]);
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" style={{ paddingBottom: '60px' }}>
       <h1>hi</h1>
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
