@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import firebase from "firebase/compat/app"
+import firebase from 'firebase/compat/app';
 import 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
@@ -26,4 +26,3 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
 export default firebase;
-

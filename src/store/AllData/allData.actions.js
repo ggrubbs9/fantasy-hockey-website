@@ -32,7 +32,7 @@ export const teamPlayersLoaded = (players) => ({
   type: PLAYERS_LOADED,
   payload: {
     players,
-  }
+  },
 });
 
 // export const fetchFantasyTeamPlayers = () => return async dispatch => {
@@ -46,16 +46,14 @@ export const teamPlayersLoaded = (players) => ({
   https://medium.com/mad-semicolon/fetch-initial-data-on-page-load-in-react-redux-application-16f4d8228543
 */
 
-
 export const fetchFantasyTeamPlayers = () => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       dispatch(loadingTeamPlayers()); // for the loading state
-      let posts = await axios.get('https://jsonplaceholder.typicode.com/posts')
-      dispatch(teamPlayersLoaded(posts.data.splice(0, 5))) //store first five posts
+      let posts = await axios.get('https://jsonplaceholder.typicode.com/posts');
+      dispatch(teamPlayersLoaded(posts.data.splice(0, 5))); //store first five posts
+    } catch (e) {
+      console.log(e);
     }
-    catch (e) {
-      console.log(e)
-    }
-  }
-}
+  };
+};

@@ -14,9 +14,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import "./pages.scss";
+import './pages.scss';
+import { connect } from 'react-redux';
+import { setCurrentWeek } from '../store/AllData/allData.actions';
 
 // to get player ID -> GET https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster
+
+const mapStateToProps = (state) => {
+  return {
+    state: state,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentWeek: (x) => dispatch(setCurrentWeek(x)),
+  };
+};
 
 function PlayerStatsComponent() {
   const [players] = useState([
@@ -232,9 +245,9 @@ function PlayerStatsComponent() {
 
   return (
     <Container>
-      <div className='header'>
+      <div className="header">
         <h1>player stats</h1>
-        <FormControl className='form-control'>
+        <FormControl className="form-control">
           <InputLabel id="demo-simple-select-label">Games Selected</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -249,10 +262,10 @@ function PlayerStatsComponent() {
         </FormControl>
       </div>
 
-      <div className='margin-bottom'>
+      <div className="margin-bottom">
         <h2>Offense Players</h2>
         <TableContainer component={Paper}>
-          <Table className='table' aria-label="simple table">
+          <Table className="table" aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -294,7 +307,7 @@ function PlayerStatsComponent() {
         <br />
         <h2>Defense Players</h2>
         <TableContainer component={Paper}>
-          <Table className='table' aria-label="simple table">
+          <Table className="table" aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -338,4 +351,7 @@ function PlayerStatsComponent() {
   );
 }
 
-export default PlayerStatsComponent;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PlayerStatsComponent);

@@ -23,7 +23,6 @@ const mapDispatchToProps = (dispatch) => {
     setCurrentWeek: (x) => dispatch(setCurrentWeek(x)),
   };
 };
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
 const Styles = styled.div`
   padding: 1rem;
@@ -391,9 +390,8 @@ function LineupMachineComponent(props) {
       createColumnData(daylist);
     };
     createDaylist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWeek]);
-  
+
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
     setColumns([

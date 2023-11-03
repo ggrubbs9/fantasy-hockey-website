@@ -12,7 +12,6 @@ import { fetchFantasyTeamPlayers } from './store/AllData/allData.actions';
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 
-
 const firebaseConfig = {
   apiKey: 'AIzaSyCQBbv-LFA0Fy2HLP82FAClcQf6JTXSnbM',
   authDomain: 'fantasy-hockey-website.firebaseapp.com',
@@ -27,7 +26,7 @@ const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars
 const db = getFirestore(app);
 
-store.dispatch(fetchFantasyTeamPlayers())
+store.dispatch(fetchFantasyTeamPlayers());
 
 root.render(
   // <React.StrictMode>
