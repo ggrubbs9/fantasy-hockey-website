@@ -20,6 +20,7 @@ import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
 import SignInDialog from './components/signInDialog';
 // import firebase from "firebase";
 
+
 const mapStateToProps = (state) => {
   return {
     teamLineup: state.teamData
