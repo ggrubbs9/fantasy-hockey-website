@@ -46,6 +46,7 @@ export const teamPlayersLoaded = (players) => ({
   https://medium.com/mad-semicolon/fetch-initial-data-on-page-load-in-react-redux-application-16f4d8228543
 */
 
+
 export const fetchFantasyTeamPlayers = () => {
   return async dispatch => {
     try {
