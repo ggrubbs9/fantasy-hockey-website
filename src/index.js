@@ -8,8 +8,10 @@ import { Provider } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore/lite';
+import { fetchFantasyTeamPlayers } from './store/AllData/allData.actions';
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
+
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCQBbv-LFA0Fy2HLP82FAClcQf6JTXSnbM',
@@ -24,6 +26,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars
 const db = getFirestore(app);
+
+store.dispatch(fetchFantasyTeamPlayers())
 
 root.render(
   // <React.StrictMode>

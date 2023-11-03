@@ -22,7 +22,7 @@ import SignInDialog from './components/signInDialog';
 
 const mapStateToProps = (state) => {
   return {
-    test: state
+    teamLineup: state.teamData
   }
 }
 

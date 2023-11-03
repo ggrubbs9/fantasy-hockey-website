@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   teamData: [],
   seasonSchedule: [],
   currentWeek: 1,
+  players: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
