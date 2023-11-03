@@ -19,7 +19,7 @@ import {
   where,
 } from 'firebase/firestore';
 
-function TeamSetupComponent(props) {
+function TeamSetupComponent() {
   const [forwards, setForwards] = useState([]);
 
   // const team = [

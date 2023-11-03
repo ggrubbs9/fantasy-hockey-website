@@ -10,22 +10,21 @@ import PlayerStatsComponent from './pages/PlayerStats';
 import PlayerPickupComponent from './pages/PlayerPickup';
 import TeamSetupComponent from './pages/TeamSetup';
 // import { useQuery, gql } from '@apollo/client';
-import "./App.css"
+import './App.css';
 
 // import { useGetNHLStatsQuery } from './helpers/NHLApi';
 import { connect } from 'react-redux';
 
 import { setTeamStats, setNHLSchedule } from './store/AllData/allData.actions';
 
-import SignInDialog from './components/signInDialog';
+// import SignInDialog from './components/signInDialog';
 // import firebase from "firebase";
-
 
 const mapStateToProps = (state) => {
   return {
-    teamLineup: state.teamData
-  }
-}
+    teamLineup: state.teamData,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -34,11 +33,10 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-function App(props, state) {
-
+function App(props) {
   useEffect(() => {
-    console.log(props)
-  }, [props])
+    console.log(props);
+  }, [props]);
   //   const HELLO_WORLD = gql`
   //     {
   //       hello
@@ -68,13 +66,13 @@ function App(props, state) {
   //   }
   // }, [isLoading,props]);
 
-  const handleClick = (e) => {
-    // console.log(e);
-  };
+  // const handleClick = (e) => {
+  //   console.log(e);
+  // };
 
-  const dialogCallback = (childData) => {
-    // console.log(childData);
-  };
+  // const dialogCallback = (childData) => {
+  //   console.log(childData);
+  // };
 
   return (
     <Router>
@@ -125,10 +123,10 @@ function App(props, state) {
             label="Team Setup"
             icon={<CachedIcon />}
           />
-          <SignInDialog
+          {/* <SignInDialog
             parentCallback={dialogCallback}
             handleClickOpen={handleClick}
-          />
+          /> */}
         </BottomNavigation>
       </div>
     </Router>

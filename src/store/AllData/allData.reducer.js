@@ -6,12 +6,12 @@ const INITIAL_STATE = {
   teamData: [],
   seasonSchedule: [],
   currentWeek: 1,
-  players: []
+  players: [],
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case LOADING_PLAYERS: 
+    case LOADING_PLAYERS:
       return {
         ...state,
         loading: true,

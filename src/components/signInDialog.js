@@ -44,12 +44,15 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
 
   const getDB = async (user) => {
     const db = getFirestore();
-    const q = query(collection(db, 'users'), where('email', '==', `${user.email}`));
+    const q = query(
+      collection(db, 'users'),
+      where('email', '==', `${user.email}`)
+    );
 
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      console.log(user)
+      console.log(user);
       // email does not exist
       const usersRef = collection(db, 'users');
       await setDoc(doc(usersRef, `${uuidv4()}`), {
@@ -57,11 +60,11 @@ export default function SignInDialog({ parentCallback, handleClickOpen }) {
         email: user.email,
         profileImg: user.photoURL,
         players: {
-          forwards:[],
-          defense:[],
-          goalies:[],
-          shorthanded:[],
-          powerplay:[]
+          forwards: [],
+          defense: [],
+          goalies: [],
+          shorthanded: [],
+          powerplay: [],
         },
       });
     } else {
