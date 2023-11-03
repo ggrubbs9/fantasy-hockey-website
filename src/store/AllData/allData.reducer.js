@@ -1,12 +1,21 @@
-import { LOADING_PLAYERS, PLAYERS_LOADED } from './allData.actions';
-import { SET_WEEK, SET_DATA, SET_NHL_SCHEDULE } from './allData.types';
+import {
+  SET_DATA,
+  SET_WEEK,
+  SET_NHL_SCHEDULE,
+  LOADING_PLAYERS,
+  LOADING_PLAYER_STATS,
+  PLAYERS_LOADED,
+  PLAYER_STATS_LOADED,
+} from './allData.types';
 
 const INITIAL_STATE = {
-  loading: false,
+  initLoading: false,
+  playerStatsLoading: false,
   teamData: [],
   seasonSchedule: [],
   currentWeek: 1,
   players: [],
+  playerStats: [],
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -14,13 +23,27 @@ const reducer = (state = INITIAL_STATE, action) => {
     case LOADING_PLAYERS:
       return {
         ...state,
-        loading: true,
+        initLoading: true,
       };
+
     case PLAYERS_LOADED:
       return {
         ...state,
-        loading: false,
+        initLoading: false,
         players: action.payload.players,
+      };
+
+    case LOADING_PLAYER_STATS:
+      return {
+        ...state,
+        playerStatsLoading: true,
+      };
+
+    case PLAYER_STATS_LOADED:
+      return {
+        ...state,
+        playerStatsLoading: false,
+        playerStats: action.payload.stats,
       };
 
     case SET_DATA:
@@ -33,7 +56,6 @@ const reducer = (state = INITIAL_STATE, action) => {
       };
 
     case SET_NHL_SCHEDULE:
-      // console.log(action);
       return {
         ...state,
         seasonSchedule: action.payload,

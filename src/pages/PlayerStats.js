@@ -16,22 +16,29 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import './pages.scss';
 import { connect } from 'react-redux';
-import { setCurrentWeek } from '../store/AllData/allData.actions';
+import {
+  fetchPlayerStats,
+  setCurrentWeek,
+} from '../store/AllData/allData.actions';
 
 // to get player ID -> GET https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster
 
 const mapStateToProps = (state) => {
   return {
-    state: state,
+    initLoading: state.initLoading,
+    playerStatsLoading: state.playerStatsLoading,
+    players: state.players,
+    playerStats: state.playerStats,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentWeek: (x) => dispatch(setCurrentWeek(x)),
+    getPlayerStats: (x) => dispatch(fetchPlayerStats(x)),
   };
 };
 
-function PlayerStatsComponent() {
+function PlayerStatsComponent(props) {
   const [players] = useState([
     { name: 'Alex Ovechkin', id: '8471214' },
     { name: 'Mika Zibanejad', id: '8476459' },
@@ -59,6 +66,20 @@ function PlayerStatsComponent() {
   function createData(name, games, goals, assists, plusMinus, points) {
     return { name, games, goals, assists, plusMinus, points };
   }
+
+  useEffect(() => {
+    //*  if initial loading is done AND players stats array is empty
+    //* then dispatch action to grab player stats
+
+    //* this checks to see if loading from init load is done, players array has players in it,
+    //* and check if we need to load player stats since it will be cached on first load
+
+    console.log(props);
+    if (props.initLoading === false && props.playerStats.length === 0) {
+      console.log('LOAD PLAYER STATS');
+      props.getPlayerStats(props.players);
+    }
+  }, [props.players, props.loading]);
 
   useEffect(() => {
     if (games === 1) {
