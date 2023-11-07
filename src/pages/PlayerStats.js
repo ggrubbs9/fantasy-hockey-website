@@ -6,6 +6,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
 } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -60,12 +61,14 @@ function PlayerStatsComponent(props) {
     { name: 'Rasmus Ristolainen', id: '8477499' },
   ]);
   const [rows, setRows] = useState([]);
+  // const [newRows, setNewRows] = useState([]);
+
   const [defenseRows, setDefenseRows] = useState([]);
   const [games, setGames] = useState(1);
 
-  function createData(name, games, goals, assists, plusMinus, points) {
+  const createData = (name, games, goals, assists, plusMinus, points) => {
     return { name, games, goals, assists, plusMinus, points };
-  }
+  };
 
   useEffect(() => {
     //*  if initial loading is done AND players stats array is empty
@@ -75,25 +78,47 @@ function PlayerStatsComponent(props) {
     //* and check if we need to load player stats since it will be cached on first load
 
     console.log(props);
-    if (props.initLoading === false && props.playerStats.length === 0) {
-      console.log('LOAD PLAYER STATS');
+    if (
+      props.initLoading === false &&
+      props.playerStatsLoading === false &&
+      props.playerStats.length === 0
+    ) {
       props.getPlayerStats(props.players);
     }
-  }, [props.players, props.loading]);
+  }, [props.players, props.playerStatsLoading, props.loading]);
 
   useEffect(() => {
-    if (games === 1) {
-      getPlayerStats();
-      getDefensePlayerStats();
-    } else if (games === 4) {
-      getSelectedPlayerStats(4);
-      getSelectedDefensePlayerStats(4);
-    } else if (games === 5) {
-      getSelectedPlayerStats(5);
-      getSelectedDefensePlayerStats(5);
+    if (props.playerStatsLoading === false && props.playerStats.length > 0) {
+      console.log('games hit');
+      populateStatTable(games);
+      if (games === 1) {
+        getPlayerStats();
+        getDefensePlayerStats();
+        // setTableStats(1);
+      } else if (games === 4) {
+        getSelectedPlayerStats(4);
+        getSelectedDefensePlayerStats(4);
+      } else if (games === 5) {
+        getSelectedPlayerStats(5);
+        getSelectedDefensePlayerStats(5);
+      }
     }
+
     // eslint-disable-next-line
-  }, [games]);
+  }, [games, props.playerStatsLoading]);
+
+  const populateStatTable = (games) => {
+    if (games === 1) {
+      console.log('yo: ', props.playerStats);
+      props.playerStats.map((player) => {
+        console.log(player);
+        // setRows((row) => [...rows, createData(
+        //   player.player.fullName,
+        //   player.games,
+        // )]);
+      });
+    }
+  };
 
   const getSelectedPlayerStats = async (games) => {
     setRows([]);
@@ -266,108 +291,116 @@ function PlayerStatsComponent(props) {
 
   return (
     <Container>
-      <div className="header">
-        <h1>player stats</h1>
-        <FormControl className="form-control">
-          <InputLabel id="demo-simple-select-label">Games Selected</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={games}
-            onChange={handleChange}
-          >
-            <MenuItem value={1}>All</MenuItem>
-            <MenuItem value={4}>Past Four</MenuItem>
-            <MenuItem value={5}>Past Five</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
+      {props.playerStatsLoading || props.initLoading ? (
+        <CircularProgress />
+      ) : (
+        <div>
+          <div className="header">
+            <h1>player stats</h1>
+            <FormControl className="form-control">
+              <InputLabel id="demo-simple-select-label">
+                Games Selected
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={games}
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>All</MenuItem>
+                <MenuItem value={4}>Past Four</MenuItem>
+                <MenuItem value={5}>Past Five</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
 
-      <div className="margin-bottom">
-        <h2>Offense Players</h2>
-        <TableContainer component={Paper}>
-          <Table className="table" aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell align="left">Games Played</TableCell>
-                <TableCell align="left">Goals</TableCell>
-                <TableCell align="left">Assists</TableCell>
-                <TableCell align="left">Plus Minus</TableCell>
+          <div className="margin-bottom">
+            <h2>Offense Players</h2>
+            <TableContainer component={Paper}>
+              <Table className="table" aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="left">Games Played</TableCell>
+                    <TableCell align="left">Goals</TableCell>
+                    <TableCell align="left">Assists</TableCell>
+                    <TableCell align="left">Plus Minus</TableCell>
 
-                <TableCell align="left">Points</TableCell>
-                <TableCell align="left">Fantasy Points</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .sort(function (a, b) {
-                  return (
-                    b.goals * 2 +
-                    b.assists +
-                    b.plusMinus * 0.5 -
-                    (a.goals * 2 + a.assists + a.plusMinus * 0.5)
-                  );
-                })
-                .map((row, i) => (
-                  <TableRow key={i}>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="center">{row.games}</TableCell>
-                    <TableCell align="center">{row.goals}</TableCell>
-                    <TableCell align="center">{row.assists}</TableCell>
-                    <TableCell align="center">{row.plusMinus}</TableCell>
-                    <TableCell align="center">{row.points}</TableCell>
-                    <TableCell align="center">
-                      {row.goals * 2 + row.assists + row.plusMinus * 0.5}
-                    </TableCell>
+                    <TableCell align="left">Points</TableCell>
+                    <TableCell align="left">Fantasy Points</TableCell>
                   </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <br />
-        <h2>Defense Players</h2>
-        <TableContainer component={Paper}>
-          <Table className="table" aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell align="left">Games Played</TableCell>
-                <TableCell align="left">Goals</TableCell>
-                <TableCell align="left">Assists</TableCell>
-                <TableCell align="left">Plus Minus</TableCell>
+                </TableHead>
+                <TableBody>
+                  {rows
+                    .sort(function (a, b) {
+                      return (
+                        b.goals * 2 +
+                        b.assists +
+                        b.plusMinus * 0.5 -
+                        (a.goals * 2 + a.assists + a.plusMinus * 0.5)
+                      );
+                    })
+                    .map((row, i) => (
+                      <TableRow key={i}>
+                        <TableCell align="left">{row.name}</TableCell>
+                        <TableCell align="center">{row.games}</TableCell>
+                        <TableCell align="center">{row.goals}</TableCell>
+                        <TableCell align="center">{row.assists}</TableCell>
+                        <TableCell align="center">{row.plusMinus}</TableCell>
+                        <TableCell align="center">{row.points}</TableCell>
+                        <TableCell align="center">
+                          {row.goals * 2 + row.assists + row.plusMinus * 0.5}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <br />
+            <h2>Defense Players</h2>
+            <TableContainer component={Paper}>
+              <Table className="table" aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="left">Games Played</TableCell>
+                    <TableCell align="left">Goals</TableCell>
+                    <TableCell align="left">Assists</TableCell>
+                    <TableCell align="left">Plus Minus</TableCell>
 
-                <TableCell align="left">Points</TableCell>
-                <TableCell align="left">Fantasy Points</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {defenseRows
-                .sort(function (a, b) {
-                  return (
-                    b.goals * 2 +
-                    b.assists +
-                    b.plusMinus * 0.5 -
-                    (a.goals * 2 + a.assists + a.plusMinus * 0.5)
-                  );
-                })
-                .map((row, i) => (
-                  <TableRow key={i}>
-                    <TableCell align="left">{row.name}</TableCell>
-                    <TableCell align="center">{row.games}</TableCell>
-                    <TableCell align="center">{row.goals}</TableCell>
-                    <TableCell align="center">{row.assists}</TableCell>
-                    <TableCell align="center">{row.plusMinus}</TableCell>
-                    <TableCell align="center">{row.points}</TableCell>
-                    <TableCell align="center">
-                      {row.goals * 2 + row.assists + row.plusMinus * 0.5}
-                    </TableCell>
+                    <TableCell align="left">Points</TableCell>
+                    <TableCell align="left">Fantasy Points</TableCell>
                   </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+                </TableHead>
+                <TableBody>
+                  {defenseRows
+                    .sort(function (a, b) {
+                      return (
+                        b.goals * 2 +
+                        b.assists +
+                        b.plusMinus * 0.5 -
+                        (a.goals * 2 + a.assists + a.plusMinus * 0.5)
+                      );
+                    })
+                    .map((row, i) => (
+                      <TableRow key={i}>
+                        <TableCell align="left">{row.name}</TableCell>
+                        <TableCell align="center">{row.games}</TableCell>
+                        <TableCell align="center">{row.goals}</TableCell>
+                        <TableCell align="center">{row.assists}</TableCell>
+                        <TableCell align="center">{row.plusMinus}</TableCell>
+                        <TableCell align="center">{row.points}</TableCell>
+                        <TableCell align="center">
+                          {row.goals * 2 + row.assists + row.plusMinus * 0.5}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        </div>
+      )}
     </Container>
   );
 }

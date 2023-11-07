@@ -70,41 +70,6 @@ function LineupMachineComponent(props) {
     return content;
   };
 
-  const teams = [
-    { name: 'Anaheim Ducks', abbr: 'ANA' },
-    { name: 'Arizona Coyotes', abbr: 'ARI' },
-    { name: 'Boston Bruins', abbr: 'BOS' },
-    { name: 'Buffalo Sabres', abbr: 'BUF' },
-    { name: 'Calgary Flames', abbr: 'CGY' },
-    { name: 'Carolina Hurricanes', abbr: 'CAR' },
-    { name: 'Chicago Blackhawks', abbr: 'CHI' },
-    { name: 'Colorado Avalanche', abbr: 'COL' },
-    { name: 'Columbus Blue Jackets', abbr: 'CBJ' },
-    { name: 'Dallas Stars', abbr: 'DAL' },
-    { name: 'Detroit Red Wings', abbr: 'DET' },
-    { name: 'Edmonton Oilers', abbr: 'EDM' },
-    { name: 'Florida Panthers', abbr: 'FLA' },
-    { name: 'Los Angeles Kings', abbr: 'LAK' },
-    { name: 'Minnesota Wild', abbr: 'MIN' },
-    { name: 'Montréal Canadiens', abbr: 'MTL' },
-    { name: 'Nashville Predators', abbr: 'NSH' },
-    { name: 'New Jersey Devils', abbr: 'NJD' },
-    { name: 'New York Islanders', abbr: 'NYI' },
-    { name: 'New York Rangers', abbr: 'NYI' },
-    { name: 'Ottawa Senators', abbr: 'OTT' },
-    { name: 'Philadelphia Flyers', abbr: 'PHI' },
-    { name: 'Pittsburgh Penguins', abbr: 'PIT' },
-    { name: 'San Jose Sharks', abbr: 'SJS' },
-    { name: 'Seattle Kraken', abbr: 'SEA' },
-    { name: 'St. Louis Blues', abbr: 'STL' },
-    { name: 'Tampa Bay Lightning', abbr: 'TBL' },
-    { name: 'Toronto Maple Leafs', abbr: 'TOR' },
-    { name: 'Vancouver Canucks', abbr: 'VAN' },
-    { name: 'Vegas Golden Knights', abbr: 'VGK' },
-    { name: 'Washington Capitals', abbr: 'WSH' },
-    { name: 'Winnipeg Jets', abbr: 'WPG' },
-  ];
-
   // TODO: Generate week list with moment or something. Given a starting date, and number of weeks
   const [fantasyWeekList] = useState([
     {
@@ -294,7 +259,7 @@ function LineupMachineComponent(props) {
       });
       weekStart = moment(weekEnd).add(1, 'days').format('MM/DD/YY');
     }
-    console.log(schedule);
+    // console.log(schedule);
   };
 
   useEffect(() => {
@@ -314,13 +279,14 @@ function LineupMachineComponent(props) {
       const startDate = moment(
         fantasyWeekList[currentWeek - 1].startDate
       ).format('YYYY-MM-DD');
-      const endDate = moment(fantasyWeekList[currentWeek - 1].endDate).format(
-        'YYYY-MM-DD'
-      );
+      // const endDate = moment(fantasyWeekList[currentWeek - 1].endDate).format(
+      //   'YYYY-MM-DD'
+      // );
 
       const getData = async (x) => {
         const res = axios.get(
-          `https://statsapi.web.nhl.com/api/v1/schedule?teamId=${x.teamID}&startDate=${startDate}&endDate=${endDate}`
+          // `https://statsapi.web.nhl.com/api/v1/schedule?teamId=${x.teamID}&startDate=${startDate}&endDate=${endDate}`
+          `v1/club-schedule/${x.teamAbbr}/week/${startDate}`
         );
         return res;
       };
@@ -331,37 +297,35 @@ function LineupMachineComponent(props) {
       await Promise.all(promises).then((results) => {
         const updatedPlayerData = [...playerData];
         results.forEach((result, index) => {
-          updatedPlayerData[index].gamesThisWeek = result.data.dates;
+          updatedPlayerData[index].gamesThisWeek = result.data.games;
         });
         setPlayerData(updatedPlayerData);
       });
     };
 
-    const addPlayerTeamAbbr = async (data) => {
-      const promises = [];
-      const getData = async (x) => {
-        const res = axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${x}`);
-        return res;
-      };
+    // const addPlayerTeamAbbr = async (data) => {
+    //   const promises = [];
+    //   const getData = async (x) => {
+    //     const res = axios.get(`https://statsapi.web.nhl.com/api/v1/teams/${x}`);
+    //     return res;
+    //   };
 
-      data.forEach((d) => {
-        promises.push(getData(d.teamID));
-      });
-      await Promise.all(promises).then((results) => {
-        const updatedPlayerData = [...playerData];
-        results.forEach((result, index) => {
-          updatedPlayerData[index].teamAbbr = result.data.teams[0].abbreviation;
-        });
-        addPlayerSchedule(updatedPlayerData);
-      });
-    };
+    //   data.forEach((d) => {
+    //     promises.push(getData(d.teamID));
+    //   });
+    //   await Promise.all(promises).then((results) => {
+    //     const updatedPlayerData = [...playerData];
+    //     results.forEach((result, index) => {
+    //       updatedPlayerData[index].teamAbbr = result.data.teams[0].abbreviation;
+    //     });
+    //     addPlayerSchedule(updatedPlayerData);
+    //   });
+    // };
 
     const addPlayerTeamID = async () => {
       const promises = [];
       const getData = async (x) => {
-        const res = axios.get(
-          `https://statsapi.web.nhl.com/api/v1/people/${x.id}`
-        );
+        const res = await axios.get(`v1/player/${x.id}/landing`);
         return res;
       };
       playerData.forEach((player) => {
@@ -370,10 +334,9 @@ function LineupMachineComponent(props) {
       await Promise.all(promises).then((results) => {
         const updatedPlayerData = [...playerData];
         results.forEach((result, index) => {
-          updatedPlayerData[index].teamID =
-            result.data.people[0].currentTeam.id;
+          updatedPlayerData[index].teamAbbr = result.data.currentTeamAbbrev;
         });
-        addPlayerTeamAbbr(updatedPlayerData);
+        addPlayerSchedule(updatedPlayerData);
       });
     };
     addPlayerTeamID();
@@ -414,17 +377,16 @@ function LineupMachineComponent(props) {
   const checkIfPlaying = (player, column) => {
     let formattedDate = moment(column.Header).format('YYYY-MM-DD');
     let gameData = player.gamesThisWeek.find(
-      (game) => game['date'] === formattedDate
+      (game) => game.gameDate === formattedDate
     );
+    console.log(player, gameData);
     if (typeof gameData !== 'undefined') {
-      const homeTeam = gameData.games[0].teams.home.team;
-      const awayTeam = gameData.games[0].teams.away.team;
-      if (player.teamID === homeTeam.id) {
-        let team = teams.find((team) => team['name'] === awayTeam.name);
-        return team.abbr;
+      const homeTeam = gameData.homeTeam;
+      const awayTeam = gameData.awayTeam;
+      if (player.teamAbbr === homeTeam.abbrev) {
+        return awayTeam.abbrev;
       } else {
-        let team = teams.find((team) => team['name'] === homeTeam.name);
-        return `@${team.abbr}`;
+        return `@${homeTeam.abbrev}`;
       }
     } else {
       return '';

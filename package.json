@@ -19,6 +19,7 @@
     "firebase": "^10.5.2",
     "flexboxgrid": "^6.3.1",
     "global": "^4.4.0",
+    "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "node-sass": "^9.0.0",
     "nodemon": "^3.0.1",
@@ -43,8 +44,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix --ext .js,.jsx .",
-    "server": "nodemon ./server/server.js"
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "eslintConfig": {
     "extends": [
@@ -80,6 +80,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",

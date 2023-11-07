@@ -31,8 +31,6 @@ const playerArr = [
   '8479976',
 ];
 
-const currentSeason = '20232024';
-
 export const setTeamStats = (data) => {
   return {
     type: SET_DATA,
@@ -93,9 +91,7 @@ export const fetchFantasyTeamPlayers = () => {
       dispatch(loadingTeamPlayers()); // for the loading state
       const promises = [];
       const getData = async (x) => {
-        const res = await axios.get(
-          `https://statsapi.web.nhl.com/api/v1/people/${x}`
-        );
+        const res = await axios.get(`v1/player/${x}/landing`);
         return res.data.people[0];
       };
       playerArr.forEach((player) => {
@@ -117,9 +113,9 @@ export const fetchPlayerStats = (players) => {
       const promises = [];
       const getData = async (player) => {
         const res = await axios.get(
-          `https://statsapi.web.nhl.com/api/v1/people/${player.id}/stats?stats=statsSingleSeason&season=${currentSeason}`
+          `https://statsapi.web.nhl.com/api/v1/people/${player.id}/stats?stats=gameLog`
         );
-        return { ...res.data.stats[0].splits[0].stat, player };
+        return { splits: res.data.stats[0].splits, player: player };
       };
       players.forEach((player) => {
         promises.push(getData(player));
