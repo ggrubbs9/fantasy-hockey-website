@@ -379,7 +379,6 @@ function LineupMachineComponent(props) {
     let gameData = player.gamesThisWeek.find(
       (game) => game.gameDate === formattedDate
     );
-    console.log(player, gameData);
     if (typeof gameData !== 'undefined') {
       const homeTeam = gameData.homeTeam;
       const awayTeam = gameData.awayTeam;
