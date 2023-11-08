@@ -91,7 +91,9 @@ export const fetchFantasyTeamPlayers = () => {
       dispatch(loadingTeamPlayers()); // for the loading state
       const promises = [];
       const getData = async (x) => {
-        const res = await axios.get(`v1/player/${x}/landing`);
+        const res = await axios.get(
+          `https://api-web.nhle.com/v1/player/${x}/landing`
+        );
         return res.data.people[0];
       };
       playerArr.forEach((player) => {

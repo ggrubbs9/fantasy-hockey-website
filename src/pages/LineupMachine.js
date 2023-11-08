@@ -286,7 +286,7 @@ function LineupMachineComponent(props) {
       const getData = async (x) => {
         const res = axios.get(
           // `https://statsapi.web.nhl.com/api/v1/schedule?teamId=${x.teamID}&startDate=${startDate}&endDate=${endDate}`
-          `v1/club-schedule/${x.teamAbbr}/week/${startDate}`
+          `https://api-web.nhle.com/v1/club-schedule/${x.teamAbbr}/week/${startDate}`
         );
         return res;
       };
@@ -325,7 +325,9 @@ function LineupMachineComponent(props) {
     const addPlayerTeamID = async () => {
       const promises = [];
       const getData = async (x) => {
-        const res = await axios.get(`v1/player/${x.id}/landing`);
+        const res = await axios.get(
+          `https://api-web.nhle.com/v1/player/${x.id}/landing`
+        );
         return res;
       };
       playerData.forEach((player) => {
