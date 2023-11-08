@@ -1,7 +1,35 @@
-import { SET_DATA, SET_WEEK, SET_NHL_SCHEDULE } from './allData.types';
+import {
+  SET_DATA,
+  SET_WEEK,
+  SET_NHL_SCHEDULE,
+  LOADING_PLAYERS,
+  LOADING_PLAYER_STATS,
+  PLAYERS_LOADED,
+  PLAYER_STATS_LOADED,
+} from './allData.types';
 import axios from 'axios';
-export const LOADING_PLAYERS = '[User] loading players';
-export const PLAYERS_LOADED = '[User] players loaded';
+
+const playerArr = [
+  '8477956',
+  '8478010',
+  '8471675',
+  '8477409',
+  '8477933',
+  '8477960',
+  '8477500',
+  '8478439',
+  '8480015',
+  '8475754',
+  '8476905',
+  '8476454',
+  '8480849',
+  '8479325',
+  '8471724',
+  '8478460',
+  '8479323',
+  '8475197',
+  '8479976',
+];
 
 export const setTeamStats = (data) => {
   return {
@@ -35,6 +63,17 @@ export const teamPlayersLoaded = (players) => ({
   },
 });
 
+export const loadingPlayerStats = () => ({
+  type: LOADING_PLAYER_STATS,
+});
+
+export const playerStatsLoaded = (stats) => ({
+  type: PLAYER_STATS_LOADED,
+  payload: {
+    stats,
+  },
+});
+
 // export const fetchFantasyTeamPlayers = () => return async dispatch => {
 //   dispatch(loadingTeamPlayers()); // for the loading state
 //   return fetch('https://jsonplaceholder.typicode.com/users')
@@ -50,8 +89,42 @@ export const fetchFantasyTeamPlayers = () => {
   return async (dispatch) => {
     try {
       dispatch(loadingTeamPlayers()); // for the loading state
-      let posts = await axios.get('https://jsonplaceholder.typicode.com/posts');
-      dispatch(teamPlayersLoaded(posts.data.splice(0, 5))); //store first five posts
+      const promises = [];
+      const getData = async (x) => {
+        const res = await axios.get(
+          `https://api-web.nhle.com/v1/player/${x}/landing`
+        );
+        return res.data.people[0];
+      };
+      playerArr.forEach((player) => {
+        promises.push(getData(player));
+      });
+      await Promise.all(promises).then((results) => {
+        dispatch(teamPlayersLoaded(results));
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
+export const fetchPlayerStats = (players) => {
+  return async (dispatch) => {
+    try {
+      dispatch(loadingPlayerStats()); // for the loading state
+      const promises = [];
+      const getData = async (player) => {
+        const res = await axios.get(
+          `https://statsapi.web.nhl.com/api/v1/people/${player.id}/stats?stats=gameLog`
+        );
+        return { splits: res.data.stats[0].splits, player: player };
+      };
+      players.forEach((player) => {
+        promises.push(getData(player));
+      });
+      await Promise.all(promises).then((results) => {
+        dispatch(playerStatsLoaded(results));
+      });
     } catch (e) {
       console.log(e);
     }
