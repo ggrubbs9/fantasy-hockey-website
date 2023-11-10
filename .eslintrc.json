@@ -1,6 +1,7 @@
 {
   "env": {
     "browser": true,
+    "node": true,
     "es2021": true,
     "jest": true
   },
@@ -14,7 +15,9 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
-  "rules": { "react/prop-types": "off" },
+  "rules": {
+    "react/prop-types": "off"
+  },
   "settings": {
     "react": {
       "version": "detect"
