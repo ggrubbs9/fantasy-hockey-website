@@ -24,6 +24,7 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
   databaseUrl: process.env.REACT_APP_DATABASE_URL,
 };
+console.log(firebaseConfig);
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
