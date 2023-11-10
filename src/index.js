@@ -22,7 +22,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_MSG_SENDER_ID,
   appId: process.env.REACT_APP_APP_ID,
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
-  databaseUrl: process.env.REACT_APP_DATABASE_URL,
+  databaseUrl: 'https://fantasy-hockey-website-default-rtdb.firebaseio.com',
 };
 console.log(firebaseConfig);
 
