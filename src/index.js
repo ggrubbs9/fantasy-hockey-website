@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { initializeApp } from 'firebase/app';
-import { fetchFantasyTeamPlayers } from './store/AllData/allData.actions';
 import { getDatabase, set, ref } from 'firebase/database';
 import { getAuth, signInAnonymously } from 'firebase/auth';
 import axios from 'axios';
@@ -1046,7 +1045,7 @@ const data = [
       },
       {
         position: 'D',
-        name: 'BRENT CLARKE',
+        name: 'BRANDT CLARKE',
       },
       {
         position: 'PP',
@@ -1303,7 +1302,7 @@ signInAnonymously(auth)
 //   }
 // });
 
-store.dispatch(fetchFantasyTeamPlayers());
+// store.dispatch(fetchFantasyTeamPlayers());
 
 root.render(
   // <React.StrictMode>

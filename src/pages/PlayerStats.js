@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   Container,
   FormControl,
@@ -22,7 +21,7 @@ import {
   setCurrentWeek,
 } from '../store/AllData/allData.actions';
 
-// to get player ID -> GET https://statsapi.web.nhl.com/api/v1/teams?expand=team.roster
+import { child, get, getDatabase, ref } from 'firebase/database';
 
 const mapStateToProps = (state) => {
   return {
@@ -40,29 +39,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function PlayerStatsComponent(props) {
-  const [players] = useState([
-    { name: 'Alex Ovechkin', id: '8471214' },
-    { name: 'Mika Zibanejad', id: '8476459' },
-    { name: 'Jonathan Huberdeau', id: '8476456' },
-    { name: 'Jake Guentzel', id: '8477404' },
-    { name: 'Ryan Nugent-Hopkins', id: '8476454' },
-    { name: 'J.T. Miller', id: '8476468' },
-    { name: 'Filip Forsberg', id: '8476887' },
-    { name: 'Brady Tkachuk', id: '8480801' },
-    { name: 'Max Domi', id: '8477503' },
-    { name: 'Chris Kreider', id: '8475184' },
-  ]);
-  const [defensePlayers] = useState([
-    { name: 'Brent Burns', id: '8470613' },
-    { name: 'Ryan Pulock', id: '8477506' },
-    { name: 'Mark Giordano', id: '8470966' },
-    { name: 'Quinn Hughes', id: '8480800' },
-    { name: 'Adam Fox', id: '8479323' },
-    { name: 'Rasmus Ristolainen', id: '8477499' },
-  ]);
   const [rows, setRows] = useState([]);
-  // const [newRows, setNewRows] = useState([]);
-
   const [defenseRows, setDefenseRows] = useState([]);
   const [games, setGames] = useState(1);
 
@@ -70,218 +47,92 @@ function PlayerStatsComponent(props) {
     return { name, games, goals, assists, plusMinus, points };
   };
 
+  // useEffect(() => {
+  //   //*  if initial loading is done AND players stats array is empty
+  //   //* then dispatch action to grab player stats
+
+  //   //* this checks to see if loading from init load is done, players array has players in it,
+  //   //* and check if we need to load player stats since it will be cached on first load
+
+  //   console.log(props);
+  //   if (
+  //     props.initLoading === false &&
+  //     props.playerStatsLoading === false &&
+  //     props.playerStats.length === 0
+  //   ) {
+  //     props.getPlayerStats(props.players);
+  //   }
+  // }, [props.players, props.playerStatsLoading, props.loading]);
+
+  //* fetch players from realtime database instead
+  const db = getDatabase();
+  const getData = ref(db);
+
   useEffect(() => {
-    //*  if initial loading is done AND players stats array is empty
-    //* then dispatch action to grab player stats
-
-    //* this checks to see if loading from init load is done, players array has players in it,
-    //* and check if we need to load player stats since it will be cached on first load
-
-    console.log(props);
-    if (
-      props.initLoading === false &&
-      props.playerStatsLoading === false &&
-      props.playerStats.length === 0
-    ) {
-      props.getPlayerStats(props.players);
-    }
-  }, [props.players, props.playerStatsLoading, props.loading]);
+    const fetchData = () => {
+      get(child(getData, '/fantasyTeams/Soft Dump In The Corner')).then(
+        (snapshot) => {
+          const fetched = snapshot.val();
+          console.log(fetched);
+          props.getPlayerStats(fetched.players);
+        }
+      );
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (props.playerStatsLoading === false && props.playerStats.length > 0) {
-      console.log('games hit');
       populateStatTable(games);
+      console.log(games);
       if (games === 1) {
-        getPlayerStats();
-        getDefensePlayerStats();
-        // setTableStats(1);
-      } else if (games === 4) {
-        getSelectedPlayerStats(4);
-        getSelectedDefensePlayerStats(4);
-      } else if (games === 5) {
-        getSelectedPlayerStats(5);
-        getSelectedDefensePlayerStats(5);
+        //* get stats for all games
       }
+      // if (games === 1) {
+      //   getPlayerStats();
+      //   getDefensePlayerStats();
+      //   // setTableStats(1);
+      // } else if (games === 4) {
+      //   getSelectedPlayerStats(4);
+      //   getSelectedDefensePlayerStats(4);
+      // } else if (games === 5) {
+      //   getSelectedPlayerStats(5);
+      //   getSelectedDefensePlayerStats(5);
+      // }
     }
-
-    // eslint-disable-next-line
   }, [games, props.playerStatsLoading]);
 
   const populateStatTable = (games) => {
     if (games === 1) {
-      console.log('yo: ', props.playerStats);
       props.playerStats.map((player) => {
-        console.log(player);
-        // setRows((row) => [...rows, createData(
-        //   player.player.fullName,
-        //   player.games,
-        // )]);
+        let seasonStats = player.seasonStats.regularSeason.subSeason;
+        if (player.player.pos === 'F') {
+          setRows((rows) => [
+            ...rows,
+            createData(
+              player.player.name,
+              seasonStats.gamesPlayed,
+              seasonStats.goals,
+              seasonStats.assists,
+              seasonStats.plusMinus,
+              seasonStats.points
+            ),
+          ]);
+        } else {
+          setDefenseRows((defenseRows) => [
+            ...defenseRows,
+            createData(
+              player.player.name,
+              seasonStats.gamesPlayed,
+              seasonStats.goals,
+              seasonStats.assists,
+              seasonStats.plusMinus,
+              seasonStats.points
+            ),
+          ]);
+        }
       });
     }
-  };
-
-  const getSelectedPlayerStats = async (games) => {
-    setRows([]);
-    const promises = [];
-
-    const getData = async (x) => {
-      const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=gameLog`
-      );
-      return res;
-    };
-
-    players.forEach((element) => {
-      promises.push(getData(element.id));
-    });
-
-    await Promise.all(promises).then((results) => {
-      results.map((item, i) => {
-        const stats = {
-          games: games,
-          goals: 0,
-          assists: 0,
-          plusMinus: 0,
-          points: 0,
-        };
-
-        let selectedGames = item.data.stats[0].splits.splice(0, games);
-        selectedGames.forEach((game) => {
-          stats.goals += game.stat.goals;
-          stats.assists += game.stat.assists;
-          stats.plusMinus += game.stat.plusMinus;
-          stats.points += game.stat.points;
-        });
-
-        setRows((rows) => [
-          ...rows,
-          {
-            name: players[i].name,
-            games: stats.games,
-            goals: stats.goals,
-            assists: stats.assists,
-            plusMinus: stats.plusMinus,
-            points: stats.points,
-          },
-        ]);
-        return null;
-      });
-    });
-  };
-
-  const getSelectedDefensePlayerStats = async (games) => {
-    setDefenseRows([]);
-    const promises = [];
-
-    const getData = async (x) => {
-      const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=gameLog`
-      );
-      return res;
-    };
-
-    defensePlayers.forEach((element) => {
-      promises.push(getData(element.id));
-    });
-
-    await Promise.all(promises).then((results) => {
-      results.map((item, i) => {
-        const stats = {
-          games: games,
-          goals: 0,
-          assists: 0,
-          plusMinus: 0,
-          points: 0,
-        };
-
-        let selectedGames = item.data.stats[0].splits.splice(0, games);
-        selectedGames.forEach((game) => {
-          stats.goals += game.stat.goals;
-          stats.assists += game.stat.assists;
-          stats.plusMinus += game.stat.plusMinus;
-          stats.points += game.stat.points;
-        });
-
-        setDefenseRows((rows) => [
-          ...rows,
-          {
-            name: defensePlayers[i].name,
-            games: stats.games,
-            goals: stats.goals,
-            assists: stats.assists,
-            plusMinus: stats.plusMinus,
-            points: stats.points,
-          },
-        ]);
-        return null;
-      });
-    });
-  };
-
-  const getPlayerStats = async () => {
-    setRows([]);
-    const promises = [];
-
-    const getData = async (x) => {
-      const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
-      );
-      return res;
-    };
-
-    players.forEach((element) => {
-      promises.push(getData(element.id));
-    });
-
-    await Promise.all(promises).then((results) => {
-      results.map((item, i) => {
-        setRows((rows) => [
-          ...rows,
-          createData(
-            players[i].name,
-            item.data.stats[0].splits[0].stat.games,
-            item.data.stats[0].splits[0].stat.goals,
-            item.data.stats[0].splits[0].stat.assists,
-            item.data.stats[0].splits[0].stat.plusMinus,
-            item.data.stats[0].splits[0].stat.points
-          ),
-        ]);
-        return null;
-      });
-    });
-  };
-
-  const getDefensePlayerStats = async () => {
-    setDefenseRows([]);
-    const promises = [];
-
-    const getData = async (x) => {
-      const res = axios.get(
-        `https://statsapi.web.nhl.com/api/v1/people/${x}/stats?stats=statsSingleSeason&season=20202021`
-      );
-      return res;
-    };
-
-    defensePlayers.forEach((element) => {
-      promises.push(getData(element.id));
-    });
-
-    await Promise.all(promises).then((results) => {
-      results.map((item, i) => {
-        setDefenseRows((rows) => [
-          ...rows,
-          createData(
-            defensePlayers[i].name,
-            item.data.stats[0].splits[0].stat.games,
-            item.data.stats[0].splits[0].stat.goals,
-            item.data.stats[0].splits[0].stat.assists,
-            item.data.stats[0].splits[0].stat.plusMinus,
-            item.data.stats[0].splits[0].stat.points
-          ),
-        ]);
-        return null;
-      });
-    });
   };
 
   const handleChange = (event) => {
@@ -291,7 +142,7 @@ function PlayerStatsComponent(props) {
 
   return (
     <Container>
-      {props.playerStatsLoading || props.initLoading ? (
+      {props.playerStatsLoading ? (
         <CircularProgress />
       ) : (
         <div>
