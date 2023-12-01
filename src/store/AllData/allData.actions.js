@@ -115,12 +115,18 @@ export const fetchPlayerStats = (players) => {
       const promises = [];
       const getData = async (player) => {
         const res = await axios.get(
-          `https://statsapi.web.nhl.com/api/v1/people/${player.id}/stats?stats=gameLog`
+          `https://api-web.nhle.com/v1/player/${player.id}/landing`
         );
-        return { splits: res.data.stats[0].splits, player: player };
+        return {
+          lastFiveGames: res.data.last5Games,
+          seasonStats: res.data.featuredStats,
+          player: player,
+        };
       };
       players.forEach((player) => {
-        promises.push(getData(player));
+        if (player.id) {
+          promises.push(getData(player));
+        }
       });
       await Promise.all(promises).then((results) => {
         dispatch(playerStatsLoaded(results));
