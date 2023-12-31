@@ -357,6 +357,9 @@ function LineupMachineComponent(props) {
     createDaylist();
   }, [currentWeek]);
 
+  // const columnHelper = createColumnHelper();
+  // do this https://github.com/TanStack/table/blob/main/examples/react/column-groups/src/main.tsx
+
   const createColumnData = (daylist) => {
     // eslint-disable-next-line array-callback-return
     setColumns([

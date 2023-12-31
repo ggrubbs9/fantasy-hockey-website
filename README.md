@@ -1,3 +1,16 @@
+## TODO
+
+Do these things: 
+- [ ] migrate react-tables to @tanstack/react-table
+- [ ] add table header for day names
+- [ ] start using typescript instead you fool
+- [ ] set up server to defeat cors
+- [ ] add dev/test/prod instances
+- [ ] add player search page
+- [ ] add login ability to see custom teams
+- [ ] add in roles (normal, admin, superadmin)
+- [ ] add player search page
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
